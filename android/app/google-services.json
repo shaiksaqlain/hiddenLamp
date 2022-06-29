@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "959041941334",
+    "project_id": "hiddenlamp",
+    "storage_bucket": "hiddenlamp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:959041941334:android:f7c5f0572a019fa37cf0f7",
+        "android_client_info": {
+          "package_name": "com.leio.hiddenlamp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "959041941334-vtsg6u6pbpt2c2cui9r3vsirof3gsmq4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.leio.hiddenlamp",
+            "certificate_hash": "5464d3e99fda05070d7dc369ee528274c80739e0"
+          }
+        },
+        {
+          "client_id": "959041941334-e4vh7m0323fn3qc8d8is91rpkreln1mt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtppjlPHhAJSRZ3-SE9CZrztr2GxG2MSQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "959041941334-e4vh7m0323fn3qc8d8is91rpkreln1mt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
