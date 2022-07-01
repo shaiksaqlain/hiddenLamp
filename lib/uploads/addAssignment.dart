@@ -12,10 +12,11 @@ class AddAssignment extends StatefulWidget {
 class _AddAssignmentState extends State<AddAssignment> {
   String assignmentUrl = "";
   String assignmentName = "";
-  String date = "";
+
   String deadLine = "";
   String description = "";
   String time = "";
+  DateTime dateToday = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -98,6 +99,7 @@ class _AddAssignmentState extends State<AddAssignment> {
                   ],
                 ),
               ),
+
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
@@ -115,11 +117,14 @@ class _AddAssignmentState extends State<AddAssignment> {
                     Expanded(
                       child: TextField(
                         onChanged: (value) {
-                          date = value;
+                          value =
+                              "${dateToday.day}/${dateToday.month}/${dateToday.year}";
                         },
                         decoration: InputDecoration(
-                            hintText: "Date",
-                            labelText: "Date",
+                            hintText:
+                                "${dateToday.day}/${dateToday.month}/${dateToday.year}",
+                            labelText:
+                                "${dateToday.day}/${dateToday.month}/${dateToday.year}",
                             border: OutlineInputBorder()),
                       ),
                     )
@@ -227,7 +232,6 @@ class _AddAssignmentState extends State<AddAssignment> {
 
                         onPressed: () {
                           if (assignmentUrl != '' &&
-                              date != '' &&
                               deadLine != '' &&
                               assignmentName != '' &&
                               time != '' &&
@@ -238,7 +242,8 @@ class _AddAssignmentState extends State<AddAssignment> {
                                 .set({
                               'AssignmentUrl': assignmentUrl,
                               'assignmentName': assignmentName,
-                              'date': date,
+                              'date':
+                                  "${dateToday.day}/${dateToday.month}/${dateToday.year}",
                               'deadline': deadLine,
                               'time': time,
                               'description': description

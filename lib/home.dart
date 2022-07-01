@@ -1,4 +1,4 @@
-// ignore_for_file: sized_box_for_whitespace
+// ignore_for_file: sized_box_for_whitespace, deprecated_member_use
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
@@ -6,9 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:hidden_lamp/admin_panel.dart';
 import 'package:hidden_lamp/course.dart';
 import 'package:hidden_lamp/project.dart';
+import 'package:hidden_lamp/services/WebviewPage.dart';
+import 'package:hidden_lamp/services/drawer.dart';
+import 'package:hidden_lamp/services/sharedPreferances.dart';
 import 'package:hidden_lamp/services/storyView.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import 'services/storyView.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -19,13 +22,17 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> globalKey = GlobalKey<ScaffoldState>();
+  DrawerWidget drawerWidget = DrawerWidget();
   var popularCourses = [];
   var reels = [];
   var projects = [];
   String name = "";
-
+  String type = "";
+  String userImage = "";
   String schoolName = "";
+  Share share = Share();
+
   @override
   initState() {
     getCourseData();
@@ -83,165 +90,17 @@ class _HomeScreenState extends State<HomeScreen> {
     DocumentSnapshot documentSnapshot = await projectCollectionRef.get();
     print(documentSnapshot.get("userName"));
     name = documentSnapshot.get("userName");
+    userImage = documentSnapshot.get("ImageUrl");
     schoolName = documentSnapshot.get("schoolName");
+    type = documentSnapshot.get("type");
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            UserAccountsDrawerHeader(
-                currentAccountPicture: CircleAvatar(
-                  backgroundColor: Colors.white,
-                  backgroundImage: AssetImage("assets/logo.png"),
-                ),
-                accountName: Text(name),
-                accountEmail: Text(schoolName)),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(right: 7),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.redAccent.shade200,
-                    radius: 20,
-                    child: IconButton(
-                        icon: Icon(
-                          EvaIcons.google,
-                          color: Colors.white,
-                          size: 25,
-                        ),
-                        onPressed: () {
-                          //googleLogin();
-                        }),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 7),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.blue,
-                    radius: 20,
-                    child: IconButton(
-                        icon: Icon(
-                          EvaIcons.facebook,
-                          color: Colors.white,
-                          size: 25,
-                        ),
-                        onPressed: () {
-                          //   print("sss");
-                          //   FirebaseAuth.instance.signOut();
-                        }),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 7),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.blue,
-                    radius: 20,
-                    child: IconButton(
-                        icon: Icon(
-                          EvaIcons.facebook,
-                          color: Colors.white,
-                          size: 25,
-                        ),
-                        onPressed: () {
-                          //   print("sss");
-                          //   FirebaseAuth.instance.signOut();
-                        }),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 7),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.green,
-                    radius: 20,
-                    child: IconButton(
-                        icon: Icon(
-                          EvaIcons.globe,
-                          color: Colors.white,
-                          size: 25,
-                        ),
-                        onPressed: () {
-                          //   print("sss");
-                          //   FirebaseAuth.instance.signOut();
-                        }),
-                  ),
-                ),
-              ],
-            ),
-            Divider(),
-            ListTile(
-              leading: Icon(
-                EvaIcons.shoppingCartOutline,
-                color: Colors.black,
-              ),
-              title: Text("My Orders"),
-            ),
-            ListTile(
-              leading: Icon(
-                EvaIcons.heartOutline,
-                color: Colors.black,
-              ),
-              title: Text("Wishlist"),
-            ),
-            Divider(),
-            ListTile(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => AdminPanel(),
-                  ),
-                );
-              },
-              leading: Icon(
-                EvaIcons.atOutline,
-                color: Colors.black,
-              ),
-              title: Text("Admin"),
-            ),
-            ListTile(
-              leading: Icon(
-                EvaIcons.settingsOutline,
-                color: Colors.black,
-              ),
-              title: Text("Settings"),
-            ),
-            ListTile(
-              leading: Icon(
-                EvaIcons.fileTextOutline,
-                color: Colors.black,
-              ),
-              title: Text("Terms & Conditions"),
-            ),
-            ListTile(
-              leading: Icon(
-                EvaIcons.questionMarkCircleOutline,
-                color: Colors.black,
-              ),
-              title: Text("Help"),
-            ),
-            ListTile(
-              leading: Icon(
-                EvaIcons.headphonesOutline,
-                color: Colors.black,
-              ),
-              title: Text("Contact Us"),
-            ),
-            Divider(),
-            ListTile(
-              leading: Icon(
-                EvaIcons.logOutOutline,
-                color: Colors.black,
-              ),
-              title: Text("Logout"),
-            ),
-          ],
-        ),
-      ),
-      key: _globalKey,
+      drawer: drawerWidget.drawer(schoolName, userImage, name, type, context),
+      key: globalKey,
       body: Column(mainAxisSize: MainAxisSize.max, children: [
         Container(
           decoration: BoxDecoration(
@@ -263,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   IconButton(
                       onPressed: () {
-                        _globalKey.currentState?.openDrawer();
+                        globalKey.currentState?.openDrawer();
                       },
                       icon: Icon(
                         EvaIcons.list,

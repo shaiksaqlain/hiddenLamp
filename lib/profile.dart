@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -64,24 +66,6 @@ class _ProfileViewState extends State<ProfileView> {
     loading = false;
     setState(() {});
   }
-
-  // Future<void> getUserData() async {
-  //   DocumentReference projectCollectionRef =
-  //       FirebaseFirestore.instance.collection('Users').doc(email);
-  //   DocumentSnapshot documentSnapshot = await projectCollectionRef.get();
-  //   print(documentSnapshot.data().toString());
-  //   print(documentSnapshot.get("schoolName"));
-  //   imageUrl = documentSnapshot.get("ImageUrl");
-  //   className = documentSnapshot.get("class");
-  //   gender = documentSnapshot.get("gender");
-  //   monthlyReport = documentSnapshot.get("montlyReport");
-  //   name = documentSnapshot.get("userName");
-  //   rollNumber = documentSnapshot.get("rollNumber");
-  //   school = documentSnapshot.get("schoolName");
-  //   section = documentSnapshot.get("section");
-  //   loading = false;
-  //   setState(() {});
-  // }
 
   int touchedIndex = 0;
 

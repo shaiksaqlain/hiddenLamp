@@ -1,7 +1,13 @@
 // ignore: file_names
+// ignore_for_file: prefer_final_fields
+
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class UserUpload extends StatefulWidget {
   const UserUpload({Key? key}) : super(key: key);
@@ -17,11 +23,44 @@ class _UserUploadState extends State<UserUpload> {
   String schoolName = "";
   String className = "Select Class";
   String password = "";
-  String imageUrl = "";
   String gender = "select Gender";
   String userType = "select User Type";
-
   String phone = "";
+  File? image;
+  TextEditingController _controller = TextEditingController();
+
+  Future pickImage() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (image == null) return;
+      final imageTemp = File(image.path);
+      setState(() => this.image = imageTemp);
+    } catch (e) {
+      print('Failed to pick image: $e');
+    }
+    uploadImage(image!);
+  }
+
+  Future uploadImage(File image) async {
+    final firebaseStorage = FirebaseStorage.instance;
+
+    // ignore: unnecessary_null_comparison
+    if (image != null) {
+      //Upload to Firebase
+      var snapshot = await firebaseStorage
+          .ref()
+          .child('images/${DateTime.now().millisecondsSinceEpoch}')
+          .putFile(image);
+
+      var downloadUrl = await snapshot.ref.getDownloadURL();
+      setState(() {
+        _controller.text = downloadUrl;
+        print(downloadUrl);
+      });
+    } else {
+      print('No Image Path Received');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -293,17 +332,24 @@ class _UserUploadState extends State<UserUpload> {
                       ),
                     ),
                     Expanded(
+                      flex: 3,
                       child: TextField(
+                          controller: _controller,
                           maxLines: null,
-                          onChanged: (value) {
-                            imageUrl = value;
-                          },
                           decoration: InputDecoration(
                               hintText: "Image Link",
                               labelText: "Image Link",
                               border: OutlineInputBorder()),
                           keyboardType: TextInputType.multiline),
                     ),
+                    Expanded(
+                      flex: 1,
+                      child: IconButton(
+                          onPressed: () {
+                            pickImage();
+                          },
+                          icon: Icon(Icons.upload)),
+                    )
                   ],
                 ),
               ),
@@ -424,8 +470,7 @@ class _UserUploadState extends State<UserUpload> {
                               phone != '' &&
                               gender != '' &&
                               className != '' &&
-                              password != '' &&
-                              imageUrl != '') {
+                              password != '') {
                             FirebaseFirestore.instance
                                 .collection('Users')
                                 .doc(phone)
@@ -438,7 +483,8 @@ class _UserUploadState extends State<UserUpload> {
                               'gender': gender,
                               'class': className,
                               'Password': password,
-                              'ImageUrl': imageUrl
+                              'ImageUrl': _controller.text.toString(),
+                              'type': userType
                             });
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(

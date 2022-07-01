@@ -1,13 +1,13 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
+import 'package:hidden_lamp/services/WebviewPage.dart';
 import 'package:hidden_lamp/services/videoPlayer.dart';
 
 class CourseList extends StatefulWidget {
   const CourseList({Key? key, this.courseList}) : super(key: key);
   // ignore: prefer_typing_uninitialized_variables
   final courseList;
-
   @override
   State<CourseList> createState() => _CourseListState();
 }
@@ -83,9 +83,10 @@ class _CourseListState extends State<CourseList> {
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (BuildContext context) => VideoApp(
-                                url: widget.courseList["EpisodesUrl"][index]),
-                          ),
+                              builder: (BuildContext context) => WebViewPage(
+                                  fileurl: widget.courseList["EpisodesUrl"]
+                                      [index],
+                                  name: "Hidden Lamp")),
                         );
                       },
                       child: Card(

@@ -6,17 +6,17 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class WebViewPage extends StatefulWidget {
+class WebPlayer extends StatefulWidget {
   final String fileurl;
   final String name;
 
-  const WebViewPage({Key? key, required this.fileurl, required this.name})
+  const WebPlayer({Key? key, required this.fileurl, required this.name})
       : super(key: key);
   @override
-  _WebViewPageState createState() => _WebViewPageState();
+  _WebPlayerState createState() => _WebPlayerState();
 }
 
-class _WebViewPageState extends State<WebViewPage> {
+class _WebPlayerState extends State<WebPlayer> {
   late String url;
   Completer<WebViewController> webViewController =
       Completer<WebViewController>();
@@ -35,17 +35,6 @@ class _WebViewPageState extends State<WebViewPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xff26c6da),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        leading: IconButton(
-          icon: Icon(EvaIcons.arrowBack),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        centerTitle: true,
-        title: Text(widget.name),
-      ),
       body: WebView(
         initialUrl: url,
         onWebResourceError: (error) => {print("bajhbvs$error")},

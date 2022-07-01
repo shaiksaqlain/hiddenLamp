@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddCourse extends StatefulWidget {
   const AddCourse({Key? key}) : super(key: key);
@@ -16,7 +20,7 @@ class _AddCourseState extends State<AddCourse> {
   List episodeNames = [];
   List epiodesUrls = [];
   String totalEpisodes = "";
-  String imageUrl = "";
+
   String language = "";
   String rating = "";
   String registeredStudents = "";
@@ -24,6 +28,41 @@ class _AddCourseState extends State<AddCourse> {
   String courseClass = "Select Course Class";
   String discription = "";
   DateTime dateToday = DateTime.now();
+  File? image;
+  TextEditingController _controller = TextEditingController();
+
+  Future pickImage() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (image == null) return;
+      final imageTemp = File(image.path);
+      setState(() => this.image = imageTemp);
+    } catch (e) {
+      print('Failed to pick image: $e');
+    }
+    uploadImage(image!);
+  }
+
+  Future uploadImage(File image) async {
+    final firebaseStorage = FirebaseStorage.instance;
+
+    // ignore: unnecessary_null_comparison
+    if (image != null) {
+      //Upload to Firebase
+      var snapshot = await firebaseStorage
+          .ref()
+          .child('images/${DateTime.now().millisecondsSinceEpoch}')
+          .putFile(image);
+
+      var downloadUrl = await snapshot.ref.getDownloadURL();
+      setState(() {
+        _controller.text = downloadUrl;
+        print(downloadUrl);
+      });
+    } else {
+      print('No Image Path Received');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -415,17 +454,24 @@ class _AddCourseState extends State<AddCourse> {
                       ),
                     ),
                     Expanded(
+                      flex: 3,
                       child: TextField(
+                          controller: _controller,
                           maxLines: null,
-                          onChanged: (value) {
-                            imageUrl = value;
-                          },
                           decoration: InputDecoration(
                               hintText: "Image Link",
                               labelText: "Image Link",
                               border: OutlineInputBorder()),
                           keyboardType: TextInputType.multiline),
                     ),
+                    Expanded(
+                      flex: 1,
+                      child: IconButton(
+                          onPressed: () {
+                            pickImage();
+                          },
+                          icon: Icon(Icons.upload)),
+                    )
                   ],
                 ),
               ),
@@ -500,7 +546,6 @@ class _AddCourseState extends State<AddCourse> {
                         onPressed: () {
                           if (autherName != '' &&
                               courseName != '' &&
-                              imageUrl != '' &&
                               language != '' &&
                               rating != '' &&
                               registeredStudents != '' &&
@@ -516,11 +561,11 @@ class _AddCourseState extends State<AddCourse> {
                                 'EpisodeDuration': episodeDuration,
                                 'Episodes': episodeNames,
                                 'EpisodesUrl': epiodesUrls,
-                                'ImageUrl': imageUrl,
+                                'ImageUrl': _controller.text.toString(),
                                 'Language': language,
                                 'LastUpdate':
                                     "${dateToday.day}/${dateToday.month}/${dateToday.year}",
-                                'Rating': imageUrl,
+                                'Rating': rating,
                                 'RegisteredStudents': registeredStudents,
                                 'SubTitle': subtitle,
                                 'TotalEpisodes': int.parse(totalEpisodes),

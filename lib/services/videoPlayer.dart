@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, file_names
+
 import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 
@@ -32,6 +34,7 @@ class _VideoAppState extends State<VideoApp> {
   double volume = 0.5;
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Video Demo',
@@ -45,8 +48,8 @@ class _VideoAppState extends State<VideoApp> {
                     FittedBox(
                       fit: BoxFit.contain,
                       child: SizedBox(
-                        width: _controller.value.size?.width ?? 0,
-                        height: _controller.value.size?.height ?? 0,
+                        width: _controller.value.size.width,
+                        height: _controller.value.size.height,
                         child: VideoPlayer(_controller),
                       ),
                     ),
@@ -77,9 +80,9 @@ class _VideoAppState extends State<VideoApp> {
                           value: volume,
                           min: 0,
                           max: 1,
-                          onChanged: (_volume) => setState(() {
-                            volume = _volume;
-                            _controller.setVolume(_volume);
+                          onChanged: (volume) => setState(() {
+                            volume = volume;
+                            _controller.setVolume(volume);
                           }),
                         ),
                         Expanded(

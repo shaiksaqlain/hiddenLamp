@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, duplicate_ignore
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hidden_lamp/homescreen.dart';
@@ -23,7 +25,9 @@ class _LoginViewState extends State<LoginView> {
       DocumentSnapshot documentSnapshot = await projectCollectionRef.get();
       print(documentSnapshot.data().toString());
       print(documentSnapshot.get("schoolName"));
+      // ignore: duplicate_ignore, duplicate_ignore
       if (documentSnapshot.get("Password") == password) {
+        // ignore: use_build_context_synchronously
         _share.sharePreferances("1", email, context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

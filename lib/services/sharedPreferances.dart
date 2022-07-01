@@ -35,6 +35,7 @@ class Share {
 
     setStatus.add("0");
     await prefs.setStringList("status", setStatus);
+    // ignore: use_build_context_synchronously
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (BuildContext context) => LoginView(),

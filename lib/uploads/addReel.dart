@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddReel extends StatefulWidget {
   const AddReel({Key? key}) : super(key: key);
@@ -12,7 +16,42 @@ class AddReel extends StatefulWidget {
 class _AddReelState extends State<AddReel> {
   String contenttype = "Select Content Type";
   String content = "";
-  String imageUrl = "";
+
+  File? image;
+  TextEditingController _controller = TextEditingController();
+
+  Future pickImage() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (image == null) return;
+      final imageTemp = File(image.path);
+      setState(() => this.image = imageTemp);
+    } catch (e) {
+      print('Failed to pick image: $e');
+    }
+    uploadImage(image!);
+  }
+
+  Future uploadImage(File image) async {
+    final firebaseStorage = FirebaseStorage.instance;
+
+    // ignore: unnecessary_null_comparison
+    if (image != null) {
+      //Upload to Firebase
+      var snapshot = await firebaseStorage
+          .ref()
+          .child('images/${DateTime.now().millisecondsSinceEpoch}')
+          .putFile(image);
+
+      var downloadUrl = await snapshot.ref.getDownloadURL();
+      setState(() {
+        _controller.text = downloadUrl;
+        print(downloadUrl);
+      });
+    } else {
+      print('No Image Path Received');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +69,7 @@ class _AddReelState extends State<AddReel> {
               Container(
                 margin: EdgeInsets.only(top: 15, right: 15, left: 15),
                 child: Text(
-                  "You Are Uploading User Details.",
+                  "You Are Uploading Reel Details.",
                   style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
@@ -66,8 +105,8 @@ class _AddReelState extends State<AddReel> {
                           child: DropdownButton<String>(
                             hint: Text(contenttype),
                             items: <String>[
-                              'admin',
-                              'student',
+                              'image',
+                              'text',
                             ].map((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
@@ -130,15 +169,23 @@ class _AddReelState extends State<AddReel> {
                       ),
                     ),
                     Expanded(
+                      flex: 3,
                       child: TextField(
-                        onChanged: (value) {
-                          imageUrl = value;
-                        },
-                        decoration: InputDecoration(
-                            hintText: "Image Url",
-                            labelText: "Image Url",
-                            border: OutlineInputBorder()),
-                      ),
+                          controller: _controller,
+                          maxLines: null,
+                          decoration: InputDecoration(
+                              hintText: "Image Link",
+                              labelText: "Image Link",
+                              border: OutlineInputBorder()),
+                          keyboardType: TextInputType.multiline),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: IconButton(
+                          onPressed: () {
+                            pickImage();
+                          },
+                          icon: Icon(Icons.upload)),
                     )
                   ],
                 ),
@@ -155,16 +202,14 @@ class _AddReelState extends State<AddReel> {
                         //checking the fields to promte the user if its Empty
 
                         onPressed: () {
-                          if (content != '' &&
-                              contenttype != '' &&
-                              imageUrl != '') {
+                          if (content != '' && contenttype != '') {
                             FirebaseFirestore.instance
                                 .collection('Reels')
                                 .doc()
                                 .set({
                               'Content': content,
                               'ContentType': contenttype,
-                              'ImageURL': imageUrl,
+                              'ImageURL': _controller.text.toString(),
                             });
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(

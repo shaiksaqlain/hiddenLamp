@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:hidden_lamp/product.dart';
+import 'package:hidden_lamp/services/drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Shop extends StatefulWidget {
@@ -10,11 +12,13 @@ class Shop extends StatefulWidget {
   State<Shop> createState() => _ShopState();
 }
 
-String name = "";
-String schoolName = "";
-
 class _ShopState extends State<Shop> {
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
+  String name = "";
+  String schoolName = "";
+  DrawerWidget drawerWidget = DrawerWidget();
+  String type = "";
+  String userImage = "";
   @override
   void initState() {
     getProductsData();
@@ -26,7 +30,6 @@ class _ShopState extends State<Shop> {
 
   CollectionReference projectCollectionRef =
       FirebaseFirestore.instance.collection('Products');
-
   Future<void> getProductsData() async {
     QuerySnapshot querySnapshot = await projectCollectionRef.get();
     products = querySnapshot.docs.map((doc) => doc.data()).toList();
@@ -50,150 +53,16 @@ class _ShopState extends State<Shop> {
     DocumentSnapshot documentSnapshot = await projectCollectionRef.get();
     print(documentSnapshot.get("userName"));
     name = documentSnapshot.get("userName");
+    userImage = documentSnapshot.get("ImageUrl");
     schoolName = documentSnapshot.get("schoolName");
+    type = documentSnapshot.get("type");
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            UserAccountsDrawerHeader(
-                currentAccountPicture: CircleAvatar(
-                  backgroundColor: Colors.white,
-                  backgroundImage: AssetImage("assets/logo.png"),
-                ),
-                accountName: Text(name),
-                accountEmail: Text(schoolName)),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(right: 7),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.redAccent.shade200,
-                    radius: 20,
-                    child: IconButton(
-                        icon: Icon(
-                          EvaIcons.google,
-                          color: Colors.white,
-                          size: 25,
-                        ),
-                        onPressed: () {
-                          //googleLogin();
-                        }),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 7),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.blue,
-                    radius: 20,
-                    child: IconButton(
-                        icon: Icon(
-                          EvaIcons.facebook,
-                          color: Colors.white,
-                          size: 25,
-                        ),
-                        onPressed: () {
-                          //   print("sss");
-                          //   FirebaseAuth.instance.signOut();
-                        }),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 7),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.blue,
-                    radius: 20,
-                    child: IconButton(
-                        icon: Icon(
-                          EvaIcons.facebook,
-                          color: Colors.white,
-                          size: 25,
-                        ),
-                        onPressed: () {
-                          //   print("sss");
-                          //   FirebaseAuth.instance.signOut();
-                        }),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 7),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.green,
-                    radius: 20,
-                    child: IconButton(
-                        icon: Icon(
-                          EvaIcons.globe,
-                          color: Colors.white,
-                          size: 25,
-                        ),
-                        onPressed: () {
-                          //   print("sss");
-                          //   FirebaseAuth.instance.signOut();
-                        }),
-                  ),
-                ),
-              ],
-            ),
-            Divider(),
-            ListTile(
-              leading: Icon(
-                EvaIcons.shoppingCartOutline,
-                color: Colors.black,
-              ),
-              title: Text("My Orders"),
-            ),
-            ListTile(
-              leading: Icon(
-                EvaIcons.heartOutline,
-                color: Colors.black,
-              ),
-              title: Text("Wishlist"),
-            ),
-            Divider(),
-            ListTile(
-              leading: Icon(
-                EvaIcons.settingsOutline,
-                color: Colors.black,
-              ),
-              title: Text("Settings"),
-            ),
-            ListTile(
-              leading: Icon(
-                EvaIcons.fileTextOutline,
-                color: Colors.black,
-              ),
-              title: Text("Terms & Conditions"),
-            ),
-            ListTile(
-              leading: Icon(
-                EvaIcons.questionMarkCircleOutline,
-                color: Colors.black,
-              ),
-              title: Text("Help"),
-            ),
-            ListTile(
-              leading: Icon(
-                EvaIcons.headphonesOutline,
-                color: Colors.black,
-              ),
-              title: Text("Contact Us"),
-            ),
-            Divider(),
-            ListTile(
-              leading: Icon(
-                EvaIcons.logOutOutline,
-                color: Colors.black,
-              ),
-              title: Text("Logout"),
-            ),
-          ],
-        ),
-      ),
+      drawer: drawerWidget.drawer(schoolName, userImage, name, type, context),
       key: _globalKey,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -343,48 +212,59 @@ class _ShopState extends State<Shop> {
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
               itemCount: products.length,
-              itemBuilder: (BuildContext context, int index) => Card(
-                elevation: 0.3,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                  side: BorderSide(
-                    color: Colors.grey.withOpacity(0.4),
-                    width: 1,
+              itemBuilder: (BuildContext context, int index) => GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => Product(
+                        productDetails: products[index],
+                      ),
+                    ),
+                  );
+                },
+                child: Card(
+                  elevation: 0.3,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                    side: BorderSide(
+                      color: Colors.grey.withOpacity(0.4),
+                      width: 1,
+                    ),
                   ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Center(
-                        child: Image.network(
-                      products[index]["ImageUrl"],
-                      width: 150,
-                      height: 100,
-                    )),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      products[index]["productName"],
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      width: 30,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          products[index]["Price"],
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    )
-                  ],
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Center(
+                          child: Image.network(
+                        products[index]["ImageUrl"],
+                        width: 150,
+                        height: 100,
+                      )),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        products[index]["productName"],
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(
+                        width: 30,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            products[index]["Price"],
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
