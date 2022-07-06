@@ -27,7 +27,6 @@ class _ShopState extends State<Shop> {
   }
 
   var products = [];
-
   CollectionReference projectCollectionRef =
       FirebaseFirestore.instance.collection('Products');
   Future<void> getProductsData() async {
@@ -47,7 +46,6 @@ class _ShopState extends State<Shop> {
     var getUserStatus = prefs.getStringList("status");
     print(getEmail);
     print(getUserStatus?[0]);
-
     DocumentReference projectCollectionRef =
         FirebaseFirestore.instance.collection('Users').doc(getEmail?[0]);
     DocumentSnapshot documentSnapshot = await projectCollectionRef.get();

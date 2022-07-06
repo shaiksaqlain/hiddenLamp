@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hidden_lamp/services/WebviewPage.dart';
+// ignore: unused_import
 import 'package:hidden_lamp/services/videoPlayer.dart';
 
 class CourseList extends StatefulWidget {
@@ -100,8 +101,13 @@ class _CourseListState extends State<CourseList> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(widget.courseList["Episodes"][index]),
-                                  Text("Duration"),
+                                  Expanded(
+                                    child: Text(
+                                      widget.courseList["Episodes"][index],
+                                    ),
+                                  ),
+                                  Text(widget.courseList["EpisodeDuration"]
+                                      [index]),
                                 ],
                               ),
                             ),

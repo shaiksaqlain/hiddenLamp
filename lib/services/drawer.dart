@@ -1,5 +1,6 @@
+// ignore_for_file: deprecated_member_use, prefer_final_fields
+
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hidden_lamp/admin_panel.dart';
 import 'package:hidden_lamp/services/WebviewPage.dart';

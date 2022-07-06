@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hidden_lamp/courseList.dart';
 
 class Product extends StatefulWidget {
   const Product({Key? key, this.productDetails}) : super(key: key);
@@ -96,7 +95,13 @@ class _ProductState extends State<Product> {
               ),
               Center(
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Shop will come Soon"),
+                      ),
+                    );
+                  },
                   style: ButtonStyle(
                     backgroundColor:
                         MaterialStateProperty.all<Color>(Color(0xff26c6da)),

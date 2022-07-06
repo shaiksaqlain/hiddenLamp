@@ -4,7 +4,9 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:hidden_lamp/uploads/addAssignment.dart';
 import 'package:hidden_lamp/uploads/addCourse.dart';
+import 'package:hidden_lamp/uploads/addProject.dart';
 import 'package:hidden_lamp/uploads/addReel.dart';
+import 'package:hidden_lamp/uploads/popular%20courses.dart';
 import 'package:hidden_lamp/uploads/userUpload.dart';
 
 class AdminPanel extends StatefulWidget {
@@ -92,8 +94,31 @@ class _AdminPanelState extends State<AdminPanel> {
                         child: listCard(EvaIcons.shoppingBagOutline, "Shop")),
                   ),
                   Expanded(
-                    child: Container(),
-                  )
+                      child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (BuildContext context) => AddProject(),
+                              ),
+                            );
+                          },
+                          child: listCard(EvaIcons.bookOutline, "Projects"))),
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                      child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    AddPopularCourse(),
+                              ),
+                            );
+                          },
+                          child: listCard(
+                              EvaIcons.bookOutline, "Popular Courses"))),
                 ],
               ),
             ],

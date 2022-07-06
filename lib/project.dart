@@ -46,7 +46,7 @@ class _ProjectState extends State<Project> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Image(
-              image: NetworkImage(widget.projectDetails["ProjectImage"]),
+              image: NetworkImage(widget.projectDetails["ImageUrl"]),
             ),
             Text(
               widget.projectDetails["ProjectName"],

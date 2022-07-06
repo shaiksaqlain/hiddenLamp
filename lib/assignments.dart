@@ -17,7 +17,6 @@ class _AssignmentsState extends State<Assignments> {
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
-    getAssignmentData();
     sharePreferances();
     super.initState();
   }
@@ -31,9 +30,9 @@ class _AssignmentsState extends State<Assignments> {
 
   DrawerWidget drawerWidget = DrawerWidget();
 
-  Future<void> getAssignmentData() async {
+  Future<void> getAssignmentData(String assignmentName) async {
     CollectionReference projectCollectionRef =
-        FirebaseFirestore.instance.collection('Assignments');
+        FirebaseFirestore.instance.collection(assignmentName);
 
     QuerySnapshot querySnapshot = await projectCollectionRef.get();
     assignments = querySnapshot.docs.map((doc) => doc.data()).toList();
@@ -59,7 +58,11 @@ class _AssignmentsState extends State<Assignments> {
     name = documentSnapshot.get("userName");
     userImage = documentSnapshot.get("ImageUrl");
     schoolName = documentSnapshot.get("schoolName");
+    className = documentSnapshot.get("class") + " assignment";
     type = documentSnapshot.get("type");
+
+    getAssignmentData(className);
+    print(className);
     setState(() {});
   }
 

@@ -34,7 +34,6 @@ class _VideoAppState extends State<VideoApp> {
   double volume = 0.5;
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Video Demo',

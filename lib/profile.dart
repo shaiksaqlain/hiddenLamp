@@ -6,7 +6,6 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:hidden_lamp/piedata/pie_data.dart';
-import 'package:hidden_lamp/services/WebviewPage.dart';
 import 'package:hidden_lamp/services/sharedPreferances.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -298,21 +297,21 @@ class _ProfileViewState extends State<ProfileView> {
                         child: itemList(EvaIcons.flagOutline, school, "0"),
                       ),
                       SizedBox(height: 10),
-                      GestureDetector(
-                        child: itemList(EvaIcons.checkmarkCircle2Outline,
-                            "Monthly report", "1"),
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (BuildContext context) => WebViewPage(
-                                fileurl: monthlyReport,
-                                name: "MOnthly Report",
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                      SizedBox(height: 10),
+                      // GestureDetector(
+                      //   child: itemList(EvaIcons.checkmarkCircle2Outline,
+                      //       "Monthly report", "1"),
+                      //   onTap: () {
+                      //     Navigator.of(context).push(
+                      //       MaterialPageRoute(
+                      //         builder: (BuildContext context) => WebViewPage(
+                      //           fileurl: monthlyReport,
+                      //           name: "Monthly Report",
+                      //         ),
+                      //       ),
+                      //     );
+                      //   },
+                      // ),
+                      // SizedBox(height: 10),
                       GestureDetector(
                         child: itemList(EvaIcons.shareOutline, "Refer", "1"),
                         onTap: () {},

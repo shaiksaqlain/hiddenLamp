@@ -30,13 +30,13 @@ class _CoursesState extends State<Courses> {
   DrawerWidget drawerWidget = DrawerWidget();
 
   Future<void> getCourseData(String className) async {
+    print(className);
     CollectionReference projectCollectionRef =
         FirebaseFirestore.instance.collection(className);
 
     QuerySnapshot querySnapshot = await projectCollectionRef.get();
     courses = querySnapshot.docs.map((doc) => doc.data()).toList();
     print(courses);
-
     setState(() {});
   }
 
@@ -59,6 +59,9 @@ class _CoursesState extends State<Courses> {
     userImage = documentSnapshot.get("ImageUrl");
     schoolName = documentSnapshot.get("schoolName");
     type = documentSnapshot.get("type");
+    className = documentSnapshot.get("class");
+
+    getCourseData(className);
     setState(() {});
   }
 
