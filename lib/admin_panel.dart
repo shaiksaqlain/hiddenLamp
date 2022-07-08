@@ -2,6 +2,7 @@
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:hidden_lamp/deliverProducts.dart';
 import 'package:hidden_lamp/uploads/addAssignment.dart';
 import 'package:hidden_lamp/uploads/addCourse.dart';
 import 'package:hidden_lamp/uploads/addProject.dart';
@@ -90,7 +91,13 @@ class _AdminPanelState extends State<AdminPanel> {
                 children: <Widget>[
                   Expanded(
                     child: GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (BuildContext context) => DeliveryPage(),
+                            ),
+                          );
+                        },
                         child: listCard(EvaIcons.shoppingBagOutline, "Shop")),
                   ),
                   Expanded(

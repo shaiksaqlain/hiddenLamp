@@ -43,11 +43,9 @@ class _ProfileViewState extends State<ProfileView> {
     setStatus == null ? setStatus = [] : print("List is not Empty");
     setUserEmail == null ? setUserEmail = [] : print("List is not Empty");
     var getEmail = prefs.getStringList("email");
-
     var getUserStatus = prefs.getStringList("status");
     print(getEmail);
     print(getUserStatus?[0]);
-
     DocumentReference projectCollectionRef =
         FirebaseFirestore.instance.collection('Users').doc(getEmail?[0]);
     DocumentSnapshot documentSnapshot = await projectCollectionRef.get();

@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, prefer_final_fields
+
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';

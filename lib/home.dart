@@ -254,7 +254,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         Expanded(
-          flex: 1,
+          flex: 2,
           child: ListView.builder(
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
@@ -297,32 +297,34 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        Row(
-          children: [
-            for (var i = 0; i < reels.length; i++)
-              Padding(
-                padding: const EdgeInsets.only(left: 10.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (BuildContext context) => StoryViewPage(
-                            storyDetails: reels[i],
-                          ),
+        Expanded(
+          child: ListView.builder(
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            itemCount: reels.length,
+            itemBuilder: (BuildContext context, int index) => Padding(
+              padding: const EdgeInsets.only(left: 10.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => StoryViewPage(
+                          storyDetails: reels[index],
                         ),
-                      );
-                    },
-                    child: CircleAvatar(
-                      radius: 30,
-                      backgroundImage: NetworkImage(reels[i]["ImageURL"]),
-                      backgroundColor: Colors.white70,
-                    ),
+                      ),
+                    );
+                  },
+                  child: CircleAvatar(
+                    radius: 30,
+                    backgroundImage: NetworkImage(reels[index]["ImageURL"]),
+                    backgroundColor: Colors.white70,
                   ),
                 ),
               ),
-          ],
+            ),
+          ),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 0),
@@ -342,7 +344,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         Expanded(
-          flex: 1,
+          flex: 2,
           child: ListView.builder(
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,

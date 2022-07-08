@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hidden_lamp/addressDetails.dart';
 
 class Product extends StatefulWidget {
   const Product({Key? key, this.productDetails}) : super(key: key);
@@ -96,9 +97,11 @@ class _ProductState extends State<Product> {
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text("Shop will come Soon"),
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => AddressDetails(
+                          productDetails: widget.productDetails,
+                        ),
                       ),
                     );
                   },

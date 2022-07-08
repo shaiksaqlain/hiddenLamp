@@ -1,24 +1,26 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, prefer_typing_uninitialized_variables
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+
 import 'package:flutter/material.dart';
 
-class AddAssignment extends StatefulWidget {
-  const AddAssignment({Key? key}) : super(key: key);
+class AddressDetails extends StatefulWidget {
+  const AddressDetails({Key? key, this.productDetails}) : super(key: key);
+  final productDetails;
 
   @override
-  State<AddAssignment> createState() => _AddAssignmentState();
+  State<AddressDetails> createState() => _AddressDetailsState();
 }
 
-class _AddAssignmentState extends State<AddAssignment> {
-  String assignmentUrl = "";
-  String assignmentName = "";
-  String assignmentClass = "";
-  String deadLine = "";
-  String description = "";
-  String time = "";
-  DateTime dateToday = DateTime.now();
+class _AddressDetailsState extends State<AddressDetails> {
+  String name = "";
+  String phone = "";
+  String address = "";
+  String town = "";
+  String state = "";
+  String pincode = "";
+  String numberOfProducts = "";
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,7 @@ class _AddAssignmentState extends State<AddAssignment> {
       appBar: AppBar(
         backgroundColor: Color(0xff26c6da),
         centerTitle: true,
-        title: Text("Upload Assignment"),
+        title: Text("Delivery Address"),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -36,11 +38,40 @@ class _AddAssignmentState extends State<AddAssignment> {
               Container(
                 margin: EdgeInsets.only(top: 15, right: 15, left: 15),
                 child: Text(
-                  "You Are Uploading Assignment Details.",
+                  "Enter address to delivary the product",
                   style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                       color: Colors.grey[600]),
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 15),
+                        child: Icon(
+                          EvaIcons.person,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: TextField(
+                        onChanged: (value) {
+                          name = value;
+                        },
+                        decoration: InputDecoration(
+                            hintText: "enter your name",
+                            labelText: "Name",
+                            border: OutlineInputBorder()),
+                      ),
+                    )
+                  ],
                 ),
               ),
 
@@ -61,11 +92,11 @@ class _AddAssignmentState extends State<AddAssignment> {
                     Expanded(
                       child: TextField(
                         onChanged: (value) {
-                          assignmentName = value;
+                          numberOfProducts = value;
                         },
                         decoration: InputDecoration(
-                            hintText: "Assignment Name",
-                            labelText: "Assignment Name",
+                            hintText: "Number of Products",
+                            labelText: "Count",
                             border: OutlineInputBorder()),
                       ),
                     )
@@ -82,64 +113,7 @@ class _AddAssignmentState extends State<AddAssignment> {
                       child: Padding(
                         padding: const EdgeInsets.only(right: 15),
                         child: Icon(
-                          EvaIcons.shieldOutline,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.grey,
-                            ),
-                            borderRadius: BorderRadius.circular(
-                              5,
-                            )),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: DropdownButton<String>(
-                            hint: Text(assignmentClass),
-                            items: <String>[
-                              '1st Class assignment',
-                              '2nt Class assignment',
-                              '3rt Class assignment',
-                              '4th Class assignment',
-                              '5th Class assignment',
-                              '6th Class assignment',
-                              '7th Class assignment',
-                              '8th Class assignment',
-                              '9th Class assignment',
-                              '10th Clas assignment',
-                            ].map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                assignmentClass = value!;
-                              });
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 15),
-                        child: Icon(
-                          EvaIcons.globe,
+                          EvaIcons.phone,
                           color: Colors.grey,
                         ),
                       ),
@@ -147,11 +121,11 @@ class _AddAssignmentState extends State<AddAssignment> {
                     Expanded(
                       child: TextField(
                         onChanged: (value) {
-                          assignmentUrl = value;
+                          phone = value;
                         },
                         decoration: InputDecoration(
-                            hintText: "Assignment Url",
-                            labelText: "Assignment Url",
+                            hintText: "Enter your phone number",
+                            labelText: "Phone",
                             border: OutlineInputBorder()),
                       ),
                     )
@@ -168,7 +142,7 @@ class _AddAssignmentState extends State<AddAssignment> {
                       child: Padding(
                         padding: const EdgeInsets.only(right: 15),
                         child: Icon(
-                          EvaIcons.clockOutline,
+                          EvaIcons.home,
                           color: Colors.grey,
                         ),
                       ),
@@ -176,14 +150,11 @@ class _AddAssignmentState extends State<AddAssignment> {
                     Expanded(
                       child: TextField(
                         onChanged: (value) {
-                          value =
-                              "${dateToday.day}/${dateToday.month}/${dateToday.year}";
+                          address = value;
                         },
                         decoration: InputDecoration(
-                            hintText:
-                                "${dateToday.day}/${dateToday.month}/${dateToday.year}",
-                            labelText:
-                                "${dateToday.day}/${dateToday.month}/${dateToday.year}",
+                            hintText: "Enter address",
+                            labelText: "Address",
                             border: OutlineInputBorder()),
                       ),
                     )
@@ -200,7 +171,7 @@ class _AddAssignmentState extends State<AddAssignment> {
                       child: Padding(
                         padding: const EdgeInsets.only(right: 15),
                         child: Icon(
-                          EvaIcons.flagOutline,
+                          EvaIcons.map,
                           color: Colors.grey,
                         ),
                       ),
@@ -208,43 +179,14 @@ class _AddAssignmentState extends State<AddAssignment> {
                     Expanded(
                       child: TextField(
                         onChanged: (value) {
-                          deadLine = value;
+                          town = value;
                         },
                         decoration: InputDecoration(
-                            hintText: "DeadLine",
-                            labelText: "DeadLine",
+                            hintText: "Enter town name",
+                            labelText: "Town",
                             border: OutlineInputBorder()),
                       ),
                     )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 15),
-                        child: Icon(
-                          EvaIcons.text,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: TextField(
-                          maxLines: null,
-                          onChanged: (value) {
-                            description = value;
-                          },
-                          decoration: InputDecoration(
-                              hintText: "Description (5-7 words)",
-                              labelText: "Description",
-                              border: OutlineInputBorder()),
-                          keyboardType: TextInputType.multiline),
-                    ),
                   ],
                 ),
               ),
@@ -258,23 +200,51 @@ class _AddAssignmentState extends State<AddAssignment> {
                       child: Padding(
                         padding: const EdgeInsets.only(right: 15),
                         child: Icon(
-                          EvaIcons.clock,
+                          EvaIcons.pin,
                           color: Colors.grey,
                         ),
                       ),
                     ),
                     Expanded(
                       child: TextField(
-                          maxLines: null,
-                          onChanged: (value) {
-                            time = value;
-                          },
-                          decoration: InputDecoration(
-                              hintText: "Time",
-                              labelText: "Time",
-                              border: OutlineInputBorder()),
-                          keyboardType: TextInputType.multiline),
+                        onChanged: (value) {
+                          pincode = value;
+                        },
+                        decoration: InputDecoration(
+                            hintText: "pincode",
+                            labelText: "Pincode",
+                            border: OutlineInputBorder()),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 15),
+                        child: Icon(
+                          EvaIcons.star,
+                          color: Colors.grey,
+                        ),
+                      ),
                     ),
+                    Expanded(
+                      child: TextField(
+                        onChanged: (value) {
+                          state = value;
+                        },
+                        decoration: InputDecoration(
+                            hintText: "Enter State name",
+                            labelText: "State",
+                            border: OutlineInputBorder()),
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -290,29 +260,46 @@ class _AddAssignmentState extends State<AddAssignment> {
                         //checking the fields to promte the user if its Empty
 
                         onPressed: () {
-                          if (assignmentUrl != '' &&
-                              deadLine != '' &&
-                              assignmentName != '' &&
-                              time != '' &&
-                              description != '') {
-                            FirebaseFirestore.instance
-                                .collection(assignmentClass)
-                                .doc()
-                                .set({
-                              'AssignmentUrl': assignmentUrl,
-                              'assignmentName': assignmentName,
-                              'date':
-                                  "${dateToday.day}/${dateToday.month}/${dateToday.year}",
-                              'deadline': deadLine,
-                              'time': time,
-                              'description': description
-                            });
-                            Navigator.of(context).pop();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text("User Added Successfully"),
-                              ),
-                            );
+                          if (name != "" &&
+                              phone != "" &&
+                              address != "" &&
+                              town != "" &&
+                              pincode != "" &&
+                              state != "") {
+                            try {
+                              FirebaseFirestore.instance
+                                  .collection("deliveryProduct")
+                                  .doc()
+                                  .set({
+                                'name': name,
+                                'phone': phone,
+                                'address': address,
+                                'town': town,
+                                'pincode': pincode,
+                                'state': state,
+                                'productName':
+                                    widget.productDetails['productName'],
+                                'productType': widget.productDetails['type'],
+                                'productPrice': widget.productDetails['Price'],
+                                'productImage':
+                                    widget.productDetails['ImageUrl'],
+                                'productDescription':
+                                    widget.productDetails['description']
+                              });
+                              Navigator.of(context).pop();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content:
+                                      Text("Product request added Successfuly"),
+                                ),
+                              );
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Error try again"),
+                                ),
+                              );
+                            }
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(

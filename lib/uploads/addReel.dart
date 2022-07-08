@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, prefer_final_fields
+
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,7 +22,9 @@ class _AddReelState extends State<AddReel> {
   File? image;
   TextEditingController _controller = TextEditingController();
 
-  Future pickImage() async {
+  TextEditingController _contentController = TextEditingController();
+
+  Future pickImage(bool isContentImage) async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
       if (image == null) return;
@@ -29,10 +33,10 @@ class _AddReelState extends State<AddReel> {
     } catch (e) {
       print('Failed to pick image: $e');
     }
-    uploadImage(image!);
+    uploadImage(image!, isContentImage);
   }
 
-  Future uploadImage(File image) async {
+  Future uploadImage(File image, bool isContentImage) async {
     final firebaseStorage = FirebaseStorage.instance;
 
     // ignore: unnecessary_null_comparison
@@ -45,7 +49,10 @@ class _AddReelState extends State<AddReel> {
 
       var downloadUrl = await snapshot.ref.getDownloadURL();
       setState(() {
-        _controller.text = downloadUrl;
+        isContentImage
+            ? {_contentController.text = downloadUrl, content = downloadUrl}
+            : {_controller.text = downloadUrl};
+
         print(downloadUrl);
       });
     } else {
@@ -125,34 +132,72 @@ class _AddReelState extends State<AddReel> {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: <Widget>[
-                    Padding(
+
+              contenttype == "text"
+                  ? Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 15),
-                        child: Icon(
-                          EvaIcons.text,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: TextField(
-                        onChanged: (value) {
-                          content = value;
-                        },
-                        decoration: InputDecoration(
-                            hintText: "Content",
-                            labelText: "Enter Content",
-                            border: OutlineInputBorder()),
+                      child: Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 15),
+                              child: Icon(
+                                EvaIcons.text,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: TextField(
+                              onChanged: (value) {
+                                content = value;
+                              },
+                              decoration: InputDecoration(
+                                  hintText: "Content",
+                                  labelText: "Enter Content",
+                                  border: OutlineInputBorder()),
+                            ),
+                          )
+                        ],
                       ),
                     )
-                  ],
-                ),
-              ),
+                  : Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 15),
+                              child: Icon(
+                                EvaIcons.imageOutline,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 3,
+                            child: TextField(
+                                controller: _contentController,
+                                maxLines: null,
+                                decoration: InputDecoration(
+                                    hintText: "Content Image Link",
+                                    labelText: "Content Image Link",
+                                    border: OutlineInputBorder()),
+                                keyboardType: TextInputType.multiline),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: IconButton(
+                                onPressed: () {
+                                  pickImage(true);
+                                },
+                                icon: Icon(Icons.upload)),
+                          )
+                        ],
+                      ),
+                    ),
 
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -183,7 +228,7 @@ class _AddReelState extends State<AddReel> {
                       flex: 1,
                       child: IconButton(
                           onPressed: () {
-                            pickImage();
+                            pickImage(false);
                           },
                           icon: Icon(Icons.upload)),
                     )
@@ -211,6 +256,8 @@ class _AddReelState extends State<AddReel> {
                               'ContentType': contenttype,
                               'ImageURL': _controller.text.toString(),
                             });
+
+                            Navigator.of(context).pop();
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text("User Added Successfully"),
