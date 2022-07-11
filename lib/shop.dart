@@ -19,6 +19,7 @@ class _ShopState extends State<Shop> {
   DrawerWidget drawerWidget = DrawerWidget();
   String type = "";
   String userImage = "";
+  String search = "";
   @override
   void initState() {
     getProductsData();
@@ -134,6 +135,10 @@ class _ShopState extends State<Shop> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
+                      onChanged: (value) {
+                        search = value;
+                        setState(() {});
+                      },
                     ),
                   ),
                 ),
@@ -210,61 +215,68 @@ class _ShopState extends State<Shop> {
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
               itemCount: products.length,
-              itemBuilder: (BuildContext context, int index) => GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => Product(
-                        productDetails: products[index],
-                      ),
-                    ),
-                  );
-                },
-                child: Card(
-                  elevation: 0.3,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                    side: BorderSide(
-                      color: Colors.grey.withOpacity(0.4),
-                      width: 1,
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Center(
-                          child: Image.network(
-                        products[index]["ImageUrl"],
-                        width: 150,
-                        height: 100,
-                      )),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        products[index]["productName"],
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(
-                        width: 30,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            products[index]["Price"],
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
+              itemBuilder: (BuildContext context, int index) => (products[index]
+                          ["productName"])
+                      .toString()
+                      .toLowerCase()
+                      .startsWith(search)
+                  ? GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => Product(
+                              productDetails: products[index],
+                            ),
                           ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ),
+                        );
+                      },
+                      child: Card(
+                        elevation: 0.3,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                          side: BorderSide(
+                            color: Colors.grey.withOpacity(0.4),
+                            width: 1,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Center(
+                                child: Image.network(
+                              products[index]["ImageUrl"],
+                              width: 150,
+                              height: 100,
+                            )),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              products[index]["productName"],
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              width: 30,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  products[index]["Price"],
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    )
+                  : Container(),
             ),
           ),
         ],

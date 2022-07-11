@@ -27,6 +27,7 @@ class _CoursesState extends State<Courses> {
   String schoolName = "";
   String type = "";
   String userImage = "";
+  String search = "";
   DrawerWidget drawerWidget = DrawerWidget();
 
   Future<void> getCourseData(String className) async {
@@ -142,6 +143,10 @@ class _CoursesState extends State<Courses> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
+                      onChanged: (value) {
+                        search = value;
+                        setState(() {});
+                      },
                     ),
                   ),
                 ),
@@ -205,30 +210,35 @@ class _CoursesState extends State<Courses> {
               padding:
                   const EdgeInsets.symmetric(horizontal: 20.0, vertical: 0),
               child: ListView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                itemCount: courses.length,
-                itemBuilder: (BuildContext context, int index) => Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (BuildContext context) => Course(
-                            courseDetails: courses[index],
-                          ),
-                        ),
-                      );
-                    },
-                    child: Center(
-                        child: Image.network(
-                      courses[index]["ImageUrl"],
-                      width: 250,
-                      height: 120,
-                    )),
-                  ),
-                ),
-              ),
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  itemCount: courses.length,
+                  itemBuilder: (BuildContext context, int index) =>
+                      (courses[index]["CourseName"])
+                              .toString()
+                              .toLowerCase()
+                              .startsWith(search)
+                          ? Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (BuildContext context) => Course(
+                                        courseDetails: courses[index],
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Center(
+                                    child: Image.network(
+                                  courses[index]["ImageUrl"],
+                                  width: 250,
+                                  height: 120,
+                                )),
+                              ),
+                            )
+                          : Container()),
             ),
           ),
         ],

@@ -27,6 +27,7 @@ class _AssignmentsState extends State<Assignments> {
   String className = "";
   String type = "";
   String userImage = "";
+  String search = "";
 
   DrawerWidget drawerWidget = DrawerWidget();
 
@@ -143,6 +144,10 @@ class _AssignmentsState extends State<Assignments> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
+                      onChanged: (value) {
+                        search = value;
+                        setState(() {});
+                      },
                     ),
                   ),
                 ),
@@ -207,99 +212,111 @@ class _AssignmentsState extends State<Assignments> {
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
               itemCount: assignments.length,
-              itemBuilder: (BuildContext context, int index) => GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => WebViewPage(
-                        fileurl: assignments[index]["AssignmentUrl"],
-                        name: assignments[index]["assignmentName"],
-                      ),
-                    ),
-                  );
-                },
-                child: Card(
-                  elevation: 0.3,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                    side: BorderSide(
-                      color: Colors.grey.withOpacity(0.4),
-                      width: 1,
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Center(
-                                child: Text(
-                              "Assignment $index",
-                              style: TextStyle(
-                                  color: Colors.red,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.bold),
-                            )),
-                            SizedBox(
-                              height: 10,
+              itemBuilder: (BuildContext context, int index) =>
+                  ((assignments[index]["assignmentName"])
+                          .toString()
+                          .toLowerCase()
+                          .startsWith(search))
+                      ? GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (BuildContext context) => WebViewPage(
+                                  fileurl: assignments[index]["AssignmentUrl"],
+                                  name: assignments[index]["assignmentName"],
+                                ),
+                              ),
+                            );
+                          },
+                          child: Card(
+                            elevation: 0.3,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                              side: BorderSide(
+                                color: Colors.grey.withOpacity(0.4),
+                                width: 1,
+                              ),
                             ),
-                            Center(
-                                child: Text(
-                              assignments[index]["assignmentName"],
-                              style: TextStyle(
-                                  fontSize: 13, fontWeight: FontWeight.bold),
-                            )),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              assignments[index]["description"],
-                              textAlign: TextAlign.justify,
-                              maxLines: 3,
-                              style: TextStyle(
-                                  fontSize: 8, fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(height: 10),
-                            Row(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text(
-                                  "Date: ${assignments[index]["date"]}",
-                                  style: TextStyle(
-                                      fontSize: 9, fontWeight: FontWeight.bold),
+                                Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Center(
+                                          child: Text(
+                                        "Assignment ${index + 1}",
+                                        style: TextStyle(
+                                            color: Colors.red,
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.bold),
+                                      )),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Center(
+                                          child: Text(
+                                        assignments[index]["assignmentName"],
+                                        style: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.bold),
+                                      )),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        assignments[index]["description"],
+                                        textAlign: TextAlign.justify,
+                                        maxLines: 3,
+                                        style: TextStyle(
+                                            fontSize: 8,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      SizedBox(height: 10),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Date: ${assignments[index]["date"]}",
+                                            style: TextStyle(
+                                                fontSize: 9,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text(
+                                            "Time: ${assignments[index]["time"]}",
+                                            style: TextStyle(
+                                                fontSize: 9,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text(
+                                            "Deadline: ${assignments[index]["deadline"]}",
+                                            style: TextStyle(
+                                                fontSize: 9,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                                 SizedBox(
                                   width: 10,
-                                ),
-                                Text(
-                                  "Time: ${assignments[index]["time"]}",
-                                  style: TextStyle(
-                                      fontSize: 9, fontWeight: FontWeight.bold),
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  "Deadline: ${assignments[index]["deadline"]}",
-                                  style: TextStyle(
-                                      fontSize: 9, fontWeight: FontWeight.bold),
                                 ),
                               ],
                             ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+                          ),
+                        )
+                      : Container(),
             ),
           ),
         ],

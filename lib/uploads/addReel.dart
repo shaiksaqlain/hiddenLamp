@@ -1,7 +1,6 @@
 // ignore_for_file: file_names, prefer_final_fields
 
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -10,7 +9,6 @@ import 'package:image_picker/image_picker.dart';
 
 class AddReel extends StatefulWidget {
   const AddReel({Key? key}) : super(key: key);
-
   @override
   State<AddReel> createState() => _AddReelState();
 }
@@ -18,12 +16,9 @@ class AddReel extends StatefulWidget {
 class _AddReelState extends State<AddReel> {
   String contenttype = "Select Content Type";
   String content = "";
-
   File? image;
   TextEditingController _controller = TextEditingController();
-
   TextEditingController _contentController = TextEditingController();
-
   Future pickImage(bool isContentImage) async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -38,7 +33,6 @@ class _AddReelState extends State<AddReel> {
 
   Future uploadImage(File image, bool isContentImage) async {
     final firebaseStorage = FirebaseStorage.instance;
-
     // ignore: unnecessary_null_comparison
     if (image != null) {
       //Upload to Firebase
