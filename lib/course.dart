@@ -1,18 +1,48 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hidden_lamp/courseList.dart';
 
 class Course extends StatefulWidget {
-  const Course({Key? key, this.courseDetails}) : super(key: key);
+  const Course({Key? key, this.courseDetails, this.email}) : super(key: key);
   // ignore: prefer_typing_uninitialized_variables
   final courseDetails;
+  // ignore: prefer_typing_uninitialized_variables
+  final email;
   @override
   State<Course> createState() => _CourseState();
 }
 
 class _CourseState extends State<Course> {
+  // ignore: prefer_typing_uninitialized_variables
+  var filterData;
+  List isCompleted = [];
+  List isOngoing = [];
   @override
   void initState() {
+    getFilterDetails(widget.email);
     super.initState();
+  }
+
+  Future<void> getFilterDetails(String email) async {
+    var collection = FirebaseFirestore.instance.collection('Filter');
+    var docSnapshot = await collection.doc(email).get();
+    if (docSnapshot.exists) {
+      filterData = docSnapshot.data();
+      isCompleted = filterData["isCourseCompleted"];
+      isOngoing = filterData["isCourseOngoing"];
+      isCompleted.contains(widget.courseDetails["DocID"]);
+      print(isCompleted);
+      print(isOngoing);
+      print(widget.courseDetails["DocID"]);
+      print(isCompleted.contains(widget.courseDetails["DocID"]));
+    }
+
+    setState(() {});
+  }
+
+  updateFilter() {
+    FirebaseFirestore.instance.collection('Filter').doc(widget.email).update(
+        {'isCourseOngoing': isOngoing, 'isCourseCompleted': isCompleted});
   }
 
   @override
@@ -182,13 +212,64 @@ class _CourseState extends State<Course> {
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => CourseList(
-                          courseList: widget.courseDetails,
+                    if (!isCompleted.contains(widget.courseDetails["DocID"]) &&
+                        !isOngoing.contains(widget.courseDetails["DocID"])) {
+                      showDialog<void>(
+                        context: context,
+                        barrierDismissible: false,
+                        // user must tap button!
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text(
+                              'Do you want to start this Course ?',
+                              style: TextStyle(
+                                  color: Colors.black45,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text(
+                                  'Yes',
+                                  style: TextStyle(color: Colors.blue),
+                                ),
+                                onPressed: () async {
+                                  isOngoing.add(widget.courseDetails["DocID"]);
+                                  setState(() {});
+                                  updateFilter();
+                                  Navigator.of(context).pop();
+
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          CourseList(
+                                        courseList: widget.courseDetails,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                              TextButton(
+                                child: Text(
+                                  'No',
+                                  style: TextStyle(color: Colors.blue),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    } else {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => CourseList(
+                            courseList: widget.courseDetails,
+                          ),
                         ),
-                      ),
-                    );
+                      );
+                    }
                   },
                   style: ButtonStyle(
                     backgroundColor:
@@ -201,13 +282,23 @@ class _CourseState extends State<Course> {
                   child: Padding(
                     padding: const EdgeInsets.only(
                         left: 120, right: 120, top: 20, bottom: 20),
-                    child: Text(
-                      "Open Course",
-                      style: TextStyle(fontSize: 17),
-                    ),
+                    child: isCompleted.contains(widget.courseDetails["DocID"])
+                        ? Text(
+                            "Completed",
+                            style: TextStyle(fontSize: 17),
+                          )
+                        : isOngoing.contains(widget.courseDetails["DocID"])
+                            ? Text(
+                                "On Progress",
+                                style: TextStyle(fontSize: 17),
+                              )
+                            : Text(
+                                "Open Course",
+                                style: TextStyle(fontSize: 17),
+                              ),
                   ),
                 ),
-              ),
+              )
             ],
           ),
         ),

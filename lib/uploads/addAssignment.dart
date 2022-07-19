@@ -307,6 +307,18 @@ class _AddAssignmentState extends State<AddAssignment> {
                               'time': time,
                               'description': description
                             });
+                            FirebaseFirestore.instance
+                                .collection("Assignments")
+                                .doc()
+                                .set({
+                              'AssignmentUrl': assignmentUrl,
+                              'assignmentName': assignmentName,
+                              'date':
+                                  "${dateToday.day}/${dateToday.month}/${dateToday.year}",
+                              'deadline': deadLine,
+                              'time': time,
+                              'description': description
+                            });
                             Navigator.of(context).pop();
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(

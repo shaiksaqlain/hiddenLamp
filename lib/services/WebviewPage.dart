@@ -33,23 +33,26 @@ class _WebViewPageState extends State<WebViewPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xff26c6da),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        leading: IconButton(
-          icon: Icon(EvaIcons.arrowBack),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          
+        backgroundColor: Color(0xff26c6da),
+       
+          leading: IconButton(
+            icon: Icon(EvaIcons.arrowBack),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          centerTitle: true,
+          title: Text(widget.name),
         ),
-        centerTitle: true,
-        title: Text(widget.name),
-      ),
-      body: WebView(
-        initialUrl: url,
-        onWebResourceError: (error) => {print("bajhbvs$error")},
-        javascriptMode: JavascriptMode.unrestricted,
+        body: WebView(
+          initialUrl: url,
+          onWebResourceError: (error) => {print("bajhbvs$error")},
+          javascriptMode: JavascriptMode.unrestricted,
+        ),
       ),
     );
   }

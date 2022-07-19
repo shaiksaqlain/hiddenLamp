@@ -20,7 +20,6 @@ class _AssignmentsState extends State<Assignments> {
     sharePreferances();
     super.initState();
   }
-
   var assignments = [];
   String name = "";
   String schoolName = "";
@@ -28,13 +27,10 @@ class _AssignmentsState extends State<Assignments> {
   String type = "";
   String userImage = "";
   String search = "";
-
   DrawerWidget drawerWidget = DrawerWidget();
-
   Future<void> getAssignmentData(String assignmentName) async {
     CollectionReference projectCollectionRef =
         FirebaseFirestore.instance.collection(assignmentName);
-
     QuerySnapshot querySnapshot = await projectCollectionRef.get();
     assignments = querySnapshot.docs.map((doc) => doc.data()).toList();
     print(assignments[0]);
@@ -51,275 +47,286 @@ class _AssignmentsState extends State<Assignments> {
     var getUserStatus = prefs.getStringList("status");
     print(getEmail);
     print(getUserStatus?[0]);
-
     DocumentReference projectCollectionRef =
-        FirebaseFirestore.instance.collection('Users').doc(getEmail?[0]);
+        FirebaseFirestore.instance.collection('Users').doc(getEmail![0]);
     DocumentSnapshot documentSnapshot = await projectCollectionRef.get();
     print(documentSnapshot.get("userName"));
     name = documentSnapshot.get("userName");
     userImage = documentSnapshot.get("ImageUrl");
     schoolName = documentSnapshot.get("schoolName");
-    className = documentSnapshot.get("class") + " assignment";
+    className = documentSnapshot.get("class");
+    className == "Courses"
+        ? className = "Assignments"
+        : className = documentSnapshot.get("class") + " assignment";
     type = documentSnapshot.get("type");
-
     getAssignmentData(className);
-    print(className);
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: drawerWidget.drawer(schoolName, userImage, name, type, context),
-      key: _globalKey,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: 30,
-          ),
-          Container(
-            decoration: BoxDecoration(
-              color: Color(0xff26c6da),
-              borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(50),
-                bottomLeft: Radius.circular(50),
-              ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 10.0),
-                  child: IconButton(
-                      onPressed: () {
-                        _globalKey.currentState?.openDrawer();
-                      },
-                      icon: Icon(
-                        EvaIcons.list,
-                        color: Colors.white,
-                        size: 30,
-                      )),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 25.0, vertical: 20),
-                  child: Text(
-                    "Assignments",
-                    style: TextStyle(
-                        letterSpacing: 1,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 25),
+    return SafeArea(
+      child: Scaffold(
+        drawer: drawerWidget.drawer(schoolName, userImage, name, type, context),
+        key: _globalKey,
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Color(0xff26c6da),
+                  borderRadius: BorderRadius.only(
+                    bottomRight: Radius.circular(50),
+                    bottomLeft: Radius.circular(50),
                   ),
                 ),
-                SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Theme(
-                    data: Theme.of(context)
-                        .copyWith(splashColor: Colors.transparent),
-                    child: TextField(
-                      autofocus: false,
-                      decoration: InputDecoration(
-                        suffixIcon: Icon(
-                          Icons.search_rounded,
-                          color: Colors.black45,
-                        ),
-                        filled: true,
-                        fillColor: Colors.white,
-                        hintText: 'search',
-                        contentPadding: const EdgeInsets.only(
-                            left: 26.0, bottom: 20.0, top: 20.0),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                          borderRadius: BorderRadius.circular(20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: IconButton(
+                          onPressed: () {
+                            _globalKey.currentState?.openDrawer();
+                          },
+                          icon: Icon(
+                            EvaIcons.list,
+                            color: Colors.white,
+                            size: 30,
+                          )),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 25.0, vertical: 20),
+                      child: Text(
+                        "Assignments",
+                        style: TextStyle(
+                            letterSpacing: 1,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 25),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Theme(
+                        data: Theme.of(context)
+                            .copyWith(splashColor: Colors.transparent),
+                        child: TextField(
+                          autofocus: false,
+                          decoration: InputDecoration(
+                            suffixIcon: Icon(
+                              Icons.search_rounded,
+                              color: Colors.black45,
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
+                            hintText: 'search',
+                            contentPadding: const EdgeInsets.only(
+                                left: 26.0, bottom: 20.0, top: 20.0),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          onChanged: (value) {
+                            search = value;
+                            setState(() {});
+                          },
                         ),
                       ),
-                      onChanged: (value) {
-                        search = value;
-                        setState(() {});
-                      },
                     ),
-                  ),
+                    SizedBox(
+                      height: 30,
+                    )
+                  ],
                 ),
-                SizedBox(
-                  height: 30,
-                )
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Wrap(
-              children: const [
-                Chip(
-                  elevation: 0.3,
-                  backgroundColor: Colors.green,
-                  avatar: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: Text('C'),
-                  ),
-                  label: Text('Completed',
-                      style: TextStyle(
-                        color: Colors.white,
-                      )),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Wrap(
+                  children: const [
+                    Chip(
+                      elevation: 0.3,
+                      backgroundColor: Colors.green,
+                      avatar: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        child: Text('A'),
+                      ),
+                      label: Text('ALL',
+                          style: TextStyle(
+                            color: Colors.white,
+                          )),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Chip(
+                      elevation: 0.3,
+                      backgroundColor: Colors.white,
+                      avatar: CircleAvatar(
+                        backgroundColor: Colors.yellow,
+                        child: Text('20',
+                            style: TextStyle(
+                              color: Colors.white,
+                            )),
+                      ),
+                      label: Text('Pending'),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Chip(
+                      elevation: 0.3,
+                      backgroundColor: Colors.white,
+                      avatar: CircleAvatar(
+                        backgroundColor: Colors.blue,
+                        child: Text('C'),
+                      ),
+                      label: Text('Completed'),
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  width: 5,
-                ),
-                Chip(
-                  elevation: 0.3,
-                  backgroundColor: Colors.white,
-                  avatar: CircleAvatar(
-                    backgroundColor: Colors.yellow,
-                    child: Text('20',
-                        style: TextStyle(
-                          color: Colors.white,
-                        )),
-                  ),
-                  label: Text('Pending'),
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                Chip(
-                  elevation: 0.3,
-                  backgroundColor: Colors.white,
-                  avatar: CircleAvatar(
-                    backgroundColor: Colors.blue,
-                    child: Text('N'),
-                  ),
-                  label: Text('Not Attended'),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 0),
-            child: ListView.builder(
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              itemCount: assignments.length,
-              itemBuilder: (BuildContext context, int index) =>
-                  ((assignments[index]["assignmentName"])
-                          .toString()
-                          .toLowerCase()
-                          .startsWith(search))
-                      ? GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (BuildContext context) => WebViewPage(
-                                  fileurl: assignments[index]["AssignmentUrl"],
-                                  name: assignments[index]["assignmentName"],
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 0),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  itemCount: assignments.length,
+                  itemBuilder: (BuildContext context, int index) =>
+                      ((assignments[index]["assignmentName"])
+                              .toString()
+                              .toLowerCase()
+                              .startsWith(search))
+                          ? GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        WebViewPage(
+                                      fileurl: assignments[index]
+                                          ["AssignmentUrl"],
+                                      name: assignments[index]
+                                          ["assignmentName"],
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Card(
+                                elevation: 0.3,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  side: BorderSide(
+                                    color: Colors.grey.withOpacity(0.4),
+                                    width: 1,
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                          child: Card(
-                            elevation: 0.3,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                              side: BorderSide(
-                                color: Colors.grey.withOpacity(0.4),
-                                width: 1,
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(15.0),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Center(
-                                          child: Text(
-                                        "Assignment ${index + 1}",
-                                        style: TextStyle(
-                                            color: Colors.red,
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.bold),
-                                      )),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Center(
-                                          child: Text(
-                                        assignments[index]["assignmentName"],
-                                        style: TextStyle(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.bold),
-                                      )),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        assignments[index]["description"],
-                                        textAlign: TextAlign.justify,
-                                        maxLines: 3,
-                                        style: TextStyle(
-                                            fontSize: 8,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      SizedBox(height: 10),
-                                      Row(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(15.0),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            "Date: ${assignments[index]["date"]}",
+                                          Center(
+                                              child: Text(
+                                            "Assignment ${index + 1}",
                                             style: TextStyle(
-                                                fontSize: 9,
+                                                color: Colors.red,
+                                                fontSize: 10,
                                                 fontWeight: FontWeight.bold),
-                                          ),
+                                          )),
                                           SizedBox(
-                                            width: 10,
+                                            height: 10,
                                           ),
-                                          Text(
-                                            "Time: ${assignments[index]["time"]}",
+                                          Center(
+                                              child: Text(
+                                            assignments[index]
+                                                ["assignmentName"],
                                             style: TextStyle(
-                                                fontSize: 9,
+                                                fontSize: 13,
                                                 fontWeight: FontWeight.bold),
-                                          ),
+                                          )),
                                           SizedBox(
-                                            width: 10,
+                                            height: 10,
                                           ),
                                           Text(
-                                            "Deadline: ${assignments[index]["deadline"]}",
+                                            assignments[index]["description"],
+                                            textAlign: TextAlign.justify,
+                                            maxLines: 3,
                                             style: TextStyle(
-                                                fontSize: 9,
+                                                fontSize: 8,
                                                 fontWeight: FontWeight.bold),
+                                          ),
+                                          SizedBox(height: 10),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                "Date: ${assignments[index]["date"]}",
+                                                style: TextStyle(
+                                                    fontSize: 9,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text(
+                                                "Time: ${assignments[index]["time"]}",
+                                                style: TextStyle(
+                                                    fontSize: 9,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text(
+                                                "Deadline: ${assignments[index]["deadline"]}",
+                                                style: TextStyle(
+                                                    fontSize: 9,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      : Container(),
-            ),
+                              ),
+                            )
+                          : Container(),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

@@ -22,7 +22,8 @@ class _AddCourseState extends State<AddCourse> {
   List episodeNames = [];
   List epiodesUrls = [];
   String totalEpisodes = "";
-
+  String docId="";
+ List thoeryEpisodesUrl = [];
   String language = "";
   String rating = "";
   String registeredStudents = "";
@@ -184,7 +185,36 @@ class _AddCourseState extends State<AddCourse> {
                       child: Padding(
                         padding: const EdgeInsets.only(right: 15),
                         child: Icon(
-                          EvaIcons.book,
+                          EvaIcons.starOutline,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: TextField(
+                        onChanged: (value) {
+                          docId = value;
+                        },
+                        decoration: InputDecoration(
+                            hintText: "Document ID",
+                            labelText: "Document ID",
+                            border: OutlineInputBorder()),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 15),
+                        child: Icon(
+                          EvaIcons.personOutline,
                           color: Colors.grey,
                         ),
                       ),
@@ -203,6 +233,7 @@ class _AddCourseState extends State<AddCourse> {
                   ],
                 ),
               ),
+
 
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -311,8 +342,38 @@ class _AddCourseState extends State<AddCourse> {
                         },
                         decoration: InputDecoration(
                             hintText:
-                                "Episode Urls Durations seperate by comma(,)",
-                            labelText: "Episode Url's",
+                                "Video  Urls seperate by comma(,)",
+                            labelText: "Video Url's",
+                            border: OutlineInputBorder()),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 15),
+                        child: Icon(
+                          EvaIcons.textOutline,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: TextField(
+                        onChanged: (value) {
+                          thoeryEpisodesUrl = value.split(",");
+                        },
+                        decoration: InputDecoration(
+                            hintText:
+                                "Thoery Urls seperate by comma(,)",
+                            labelText: "Thoery Url's",
                             border: OutlineInputBorder()),
                       ),
                     )
@@ -556,15 +617,39 @@ class _AddCourseState extends State<AddCourse> {
                             try {
                               FirebaseFirestore.instance
                                   .collection(courseClass)
-                                  .doc()
+                                  .doc(docId)
                                   .set({
                                 'Author': autherName,
                                 'CourseName': courseName,
                                 'EpisodeDuration': episodeDuration,
                                 'Episodes': episodeNames,
                                 'EpisodesUrl': epiodesUrls,
+                                'TheoryEpisodes':thoeryEpisodesUrl,
                                 'ImageUrl': _controller.text.toString(),
                                 'Language': language,
+                                'DocID':docId,
+                                'LastUpdate':
+                                    "${dateToday.day}/${dateToday.month}/${dateToday.year}",
+                                'Rating': rating,
+                                'RegisteredStudents': registeredStudents,
+                                'SubTitle': subtitle,
+                                'TotalEpisodes': int.parse(totalEpisodes),
+                                'description': discription,
+                              });
+
+                              FirebaseFirestore.instance
+                                  .collection("Courses")
+                                  .doc(docId)
+                                  .set({
+                                'Author': autherName,
+                                'CourseName': courseName,
+                                'EpisodeDuration': episodeDuration,
+                                'Episodes': episodeNames,
+                                'EpisodesUrl': epiodesUrls,
+                                'TheoryEpisodes':thoeryEpisodesUrl,
+                                'ImageUrl': _controller.text.toString(),
+                                'Language': language,
+                                   'DocID':docId,
                                 'LastUpdate':
                                     "${dateToday.day}/${dateToday.month}/${dateToday.year}",
                                 'Rating': rating,

@@ -8,7 +8,9 @@ import 'package:hidden_lamp/uploads/addCourse.dart';
 import 'package:hidden_lamp/uploads/addProject.dart';
 import 'package:hidden_lamp/uploads/addReel.dart';
 import 'package:hidden_lamp/uploads/popular%20courses.dart';
-import 'package:hidden_lamp/uploads/userUpload.dart';
+import 'package:hidden_lamp/uploads/addUser.dart';
+import 'package:hidden_lamp/uploads/updateReels.dart';
+import 'package:hidden_lamp/uploads/updateUser.dart';
 
 class AdminPanel extends StatefulWidget {
   const AdminPanel({Key? key}) : super(key: key);
@@ -29,103 +31,354 @@ class _AdminPanelState extends State<AdminPanel> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                      child: GestureDetector(
-                          onTap: () {
+              ExpansionTile(
+                textColor: Colors.black,
+                title: Text(
+                  "User",
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+                subtitle:
+                    Text("You can create and update the user Details here."),
+                leading: Container(
+                  padding: EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                      color: Colors.deepPurple[50],
+                      borderRadius: BorderRadius.circular(5)),
+                  child: Icon(EvaIcons.personOutline,
+                      size: 30, color: Colors.deepPurple[300]),
+                ),
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      TextButton.icon(
+                          onPressed: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (BuildContext context) => UserUpload(),
                               ),
                             );
                           },
-                          child: listCard(EvaIcons.personAddOutline, "Users"))),
-                  Expanded(
-                      child: GestureDetector(
-                          onTap: () {
+                          icon: Icon(
+                            EvaIcons.personAddOutline,
+                            color: Colors.red[600],
+                          ),
+                          label: Text("Create")),
+                      TextButton.icon(
+                          onPressed: () {
+
+                             Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (BuildContext context) => UpdateUser(),
+                              ),
+                            );
+                          },
+                          icon: Icon(
+                            EvaIcons.edit2Outline,
+                            color: Colors.orange[400],
+                          ),
+                          label: Text("Update")),
+                    ],
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              ExpansionTile(
+                textColor: Colors.black,
+                title: Text(
+                  "Course",
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+                subtitle:
+                    Text("You can create and update the Course Details here."),
+                leading: Container(
+                  padding: EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                      color: Colors.deepPurple[50],
+                      borderRadius: BorderRadius.circular(5)),
+                  child: Icon(EvaIcons.bookOutline,
+                      size: 30, color: Colors.deepPurple[300]),
+                ),
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      TextButton.icon(
+                          onPressed: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (BuildContext context) => AddCourse(),
                               ),
                             );
                           },
-                          child: listCard(EvaIcons.bookOutline, "Courses"))),
+                          icon: Icon(
+                            EvaIcons.personAddOutline,
+                            color: Colors.red[600],
+                          ),
+                          label: Text("Create")),
+                      TextButton.icon(
+                          onPressed: () {},
+                          icon: Icon(
+                            EvaIcons.edit2Outline,
+                            color: Colors.orange[400],
+                          ),
+                          label: Text("Update")),
+                    ],
+                  )
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                      child: GestureDetector(
-                          onTap: () {
+              
+              SizedBox(
+                height: 20,
+              ),
+              ExpansionTile(
+                textColor: Colors.black,
+                title: Text(
+                  "Reels",
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+                subtitle:
+                    Text("You can create and update the Reels Details here."),
+                leading: Container(
+                  padding: EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                      color: Colors.deepPurple[50],
+                      borderRadius: BorderRadius.circular(5)),
+                  child: Icon(EvaIcons.starOutline,
+                      size: 30, color: Colors.deepPurple[300]),
+                ),
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      TextButton.icon(
+                          onPressed: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (BuildContext context) => AddReel(),
                               ),
                             );
                           },
-                          child: listCard(EvaIcons.starOutline, "Reels"))),
-                  Expanded(
-                    child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  AddAssignment(),
-                            ),
-                          );
-                        },
-                        child: listCard(EvaIcons.activity, "Assignment")),
-                  ),
-                ],
-              ),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (BuildContext context) => DeliveryPage(),
-                            ),
-                          );
-                        },
-                        child: listCard(EvaIcons.shoppingBagOutline, "Shop")),
-                  ),
-                  Expanded(
-                      child: GestureDetector(
-                          onTap: () {
+                          icon: Icon(
+                            EvaIcons.personAddOutline,
+                            color: Colors.red[600],
+                          ),
+                          label: Text("Create")),
+                      TextButton.icon(
+                          onPressed: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (BuildContext context) => AddProject(),
+                                builder: (BuildContext context) =>UpdateReel(),
                               ),
                             );
                           },
-                          child: listCard(EvaIcons.bookOutline, "Projects"))),
+                          icon: Icon(
+                            EvaIcons.edit2Outline,
+                            color: Colors.orange[400],
+                          ),
+                          label: Text("Update")),
+                    ],
+                  )
                 ],
               ),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                      child: GestureDetector(
-                          onTap: () {
+              
+              SizedBox(
+                height: 20,
+              ),
+              ExpansionTile(
+                textColor: Colors.black,
+                title: Text(
+                  "Assignment",
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+                subtitle:
+                    Text("You can create and update the Assignment Details here."),
+                leading: Container(
+                  padding: EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                      color: Colors.deepPurple[50],
+                      borderRadius: BorderRadius.circular(5)),
+                  child: Icon(EvaIcons.activityOutline,
+                      size: 30, color: Colors.deepPurple[300]),
+                ),
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      TextButton.icon(
+                          onPressed: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    AddPopularCourse(),
+                                builder: (BuildContext context) => AddAssignment(),
                               ),
                             );
                           },
-                          child: listCard(
-                              EvaIcons.bookOutline, "Popular Courses"))),
+                          icon: Icon(
+                            EvaIcons.personAddOutline,
+                            color: Colors.red[600],
+                          ),
+                          label: Text("Create")),
+                      TextButton.icon(
+                          onPressed: () {},
+                          icon: Icon(
+                            EvaIcons.edit2Outline,
+                            color: Colors.orange[400],
+                          ),
+                          label: Text("Update")),
+                    ],
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              
+              ExpansionTile(
+                textColor: Colors.black,
+                title: Text(
+                  "Shop",
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+                subtitle:
+                    Text("You can create and update the Shop Details here."),
+                leading: Container(
+                  padding: EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                      color: Colors.deepPurple[50],
+                      borderRadius: BorderRadius.circular(5)),
+                  child: Icon(EvaIcons.shoppingBagOutline,
+                      size: 30, color: Colors.deepPurple[300]),
+                ),
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      TextButton.icon(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (BuildContext context) => DeliveryPage(),
+                              ),
+                            );
+                          },
+                          icon: Icon(
+                            EvaIcons.personAddOutline,
+                            color: Colors.red[600],
+                          ),
+                          label: Text("Create")),
+                      TextButton.icon(
+                          onPressed: () {},
+                          icon: Icon(
+                            EvaIcons.edit2Outline,
+                            color: Colors.orange[400],
+                          ),
+                          label: Text("Update")),
+                    ],
+                  )
+                ],
+              ),
+
+              
+              SizedBox(
+                height: 20,
+              ),
+              ExpansionTile(
+                textColor: Colors.black,
+                title: Text(
+                  "Project",
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+                subtitle:
+                    Text("You can create and update the Project Details here."),
+                leading: Container(
+                  padding: EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                      color: Colors.deepPurple[50],
+                      borderRadius: BorderRadius.circular(5)),
+                  child: Icon(EvaIcons.toggleLeftOutline,
+                      size: 30, color: Colors.deepPurple[300]),
+                ),
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      TextButton.icon(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (BuildContext context) => AddProject()
+                              ),
+                            );
+                          },
+                          icon: Icon(
+                            EvaIcons.personAddOutline,
+                            color: Colors.red[600],
+                          ),
+                          label: Text("Create")),
+                      TextButton.icon(
+                          onPressed: () {},
+                          icon: Icon(
+                            EvaIcons.edit2Outline,
+                            color: Colors.orange[400],
+                          ),
+                          label: Text("Update")),
+                    ],
+                  )
+                ],
+              ),
+
+              SizedBox(
+                height: 20,
+              ),
+              
+              ExpansionTile(
+                textColor: Colors.black,
+                title: Text(
+                  "Popular Course",
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+                subtitle:
+                    Text("You can create and update the Popular Course Details here."),
+                leading: Container(
+                  padding: EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                      color: Colors.deepPurple[50],
+                      borderRadius: BorderRadius.circular(5)),
+                  child: Icon(EvaIcons.bookOutline,
+                      size: 30, color: Colors.deepPurple[300]),
+                ),
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      TextButton.icon(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (BuildContext context) => AddPopularCourse(),
+                              ),
+                            );
+                          },
+                          icon: Icon(
+                            EvaIcons.personAddOutline,
+                            color: Colors.red[600],
+                          ),
+                          label: Text("Create")),
+                      TextButton.icon(
+                          onPressed: () {},
+                          icon: Icon(
+                            EvaIcons.edit2Outline,
+                            color: Colors.orange[400],
+                          ),
+                          label: Text("Update")),
+                    ],
+                  )
                 ],
               ),
             ],

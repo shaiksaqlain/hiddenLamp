@@ -13,19 +13,19 @@ class DeliveryPage extends StatefulWidget {
 class _DeliveryPageState extends State<DeliveryPage> {
   @override
   void initState() {
-    getAssignmentData();
+    getDeliveryProductData();
     super.initState();
   }
 
   var products = [];
 
-  Future<void> getAssignmentData() async {
+  Future<void> getDeliveryProductData() async {
     CollectionReference projectCollectionRef =
         FirebaseFirestore.instance.collection("deliveryProduct");
 
     QuerySnapshot querySnapshot = await projectCollectionRef.get();
     products = querySnapshot.docs.map((doc) => doc.data()).toList();
-    print(products[0]);
+
     setState(() {});
   }
 
@@ -54,14 +54,15 @@ class _DeliveryPageState extends State<DeliveryPage> {
                 Padding(
                   padding: const EdgeInsets.only(left: 10.0),
                   child: IconButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      icon: Icon(
-                        EvaIcons.arrowIosBack,
-                        color: Colors.white,
-                        size: 30,
-                      )),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    icon: Icon(
+                      EvaIcons.arrowIosBack,
+                      color: Colors.white,
+                      size: 30,
+                    ),
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(

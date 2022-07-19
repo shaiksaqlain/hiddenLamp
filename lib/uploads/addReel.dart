@@ -1,3 +1,4 @@
+
 // ignore_for_file: file_names, prefer_final_fields
 
 import 'dart:io';
@@ -7,18 +8,21 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class AddReel extends StatefulWidget {
+ class AddReel extends StatefulWidget {
   const AddReel({Key? key}) : super(key: key);
   @override
   State<AddReel> createState() => _AddReelState();
-}
+}   
 
 class _AddReelState extends State<AddReel> {
   String contenttype = "Select Content Type";
   String content = "";
   File? image;
+  String label="";
+  String docID="";
   TextEditingController _controller = TextEditingController();
   TextEditingController _contentController = TextEditingController();
+
   Future pickImage(bool isContentImage) async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -126,7 +130,65 @@ class _AddReelState extends State<AddReel> {
                   ],
                 ),
               ),
+              Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 15),
+                              child: Icon(
+                                EvaIcons.text,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: TextField(
+                              onChanged: (value) {
+                                label = value;
+                              },
+                              decoration: InputDecoration(
+                                  hintText: "Label",
+                                  labelText: "Enter label (1 word)",
+                                  border: OutlineInputBorder()),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+              
 
+              Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 15),
+                              child: Icon(
+                                EvaIcons.starOutline,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: TextField(
+                              onChanged: (value) {
+                                docID = value;
+                              },
+                              decoration: InputDecoration(
+                                  hintText: "REEl ID",
+                                  labelText: "REEL ID",
+                                  border: OutlineInputBorder()),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+              
               contenttype == "text"
                   ? Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -239,16 +301,18 @@ class _AddReelState extends State<AddReel> {
                     child: TextButton.icon(
 
                         //checking the fields to promte the user if its Empty
-
                         onPressed: () {
                           if (content != '' && contenttype != '') {
                             FirebaseFirestore.instance
                                 .collection('Reels')
-                                .doc()
+                                .doc(docID)
                                 .set({
                               'Content': content,
+                              'label':label,
                               'ContentType': contenttype,
                               'ImageURL': _controller.text.toString(),
+                              'DocID':docID
+                             
                             });
 
                             Navigator.of(context).pop();

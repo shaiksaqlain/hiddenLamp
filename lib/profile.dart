@@ -47,7 +47,7 @@ class _ProfileViewState extends State<ProfileView> {
     print(getEmail);
     print(getUserStatus?[0]);
     DocumentReference projectCollectionRef =
-        FirebaseFirestore.instance.collection('Users').doc(getEmail?[0]);
+        FirebaseFirestore.instance.collection('Users').doc(getEmail![0]);
     DocumentSnapshot documentSnapshot = await projectCollectionRef.get();
     print(documentSnapshot.get("userName"));
     print(documentSnapshot.data().toString());
@@ -94,238 +94,370 @@ class _ProfileViewState extends State<ProfileView> {
         body: SingleChildScrollView(
       child: loading
           ? LinearProgressIndicator()
-          : Column(
-              children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 50,
-                    ),
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(imageUrl),
-                      backgroundColor: Colors.white,
-                      radius: 40,
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Row(
+          : section != "admin"
+              ? Column(
+                  children: <Widget>[
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          name,
-                          style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18),
+                        SizedBox(
+                          height: 50,
                         ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Container(
-                      height: 30,
-                      width: 200,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Color(0xff26c6da),
-                      ),
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            'Roll No : $rollNumber',
-                            style: TextStyle(
-                                letterSpacing: 1,
-                                color: Colors.black,
-                                fontFamily: "Poppins",
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600),
+                        CircleAvatar(
+                          backgroundImage: NetworkImage(imageUrl),
+                          backgroundColor: Colors.white,
+                          radius: 40,
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              name,
+                              style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Container(
+                          height: 30,
+                          width: 200,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Color(0xff26c6da),
+                          ),
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Roll No : $rollNumber',
+                                style: TextStyle(
+                                    letterSpacing: 1,
+                                    color: Colors.black,
+                                    fontFamily: "Poppins",
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ),
                           ),
                         ),
+                        SizedBox(
+                          height: 20,
+                        )
+                      ],
+                    ),
+                    Text(
+                      "Courses",
+                      style: TextStyle(
+                          letterSpacing: 1,
+                          color: Colors.black,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          for (var i = 0; i < 4; i++)
+                            Padding(
+                              padding: const EdgeInsets.only(left: 15.0),
+                              child: Column(
+                                children: [
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: GestureDetector(
+                                      onTap: () {},
+                                      child: CircleAvatar(
+                                        radius: 20,
+                                        backgroundImage:
+                                            AssetImage("assets/s$i.png"),
+                                        backgroundColor: Colors.white70,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text("Subject $i")
+                                ],
+                              ),
+                            ),
+                        ],
                       ),
                     ),
                     SizedBox(
                       height: 20,
-                    )
-                  ],
-                ),
-                Text(
-                  "Courses",
-                  style: TextStyle(
-                      letterSpacing: 1,
-                      color: Colors.black,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      for (var i = 0; i < 4; i++)
-                        Padding(
-                          padding: const EdgeInsets.only(left: 15.0),
-                          child: Column(
-                            children: [
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: GestureDetector(
-                                  onTap: () {},
-                                  child: CircleAvatar(
-                                    radius: 20,
-                                    backgroundImage:
-                                        AssetImage("assets/s$i.png"),
-                                    backgroundColor: Colors.white70,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text("Subject $i")
-                            ],
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  "Assignment Progress Chart",
-                  style: TextStyle(
-                      letterSpacing: 1,
-                      color: Colors.black,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 110.0),
-                  child: PieChart(
-                    PieChartData(
-                      pieTouchData: PieTouchData(
-                        touchCallback: (pieTouchResponse) {
-                          setState(() {
-                            if (pieTouchResponse.touchInput is FlLongPressEnd ||
-                                pieTouchResponse.touchInput is FlPanEnd) {
-                              touchedIndex = -1;
-                            } else {
-                              touchedIndex =
-                                  pieTouchResponse.touchedSectionIndex;
-                            }
-                          });
-                        },
-                      ),
-                      borderData: FlBorderData(show: false),
-                      sectionsSpace: 0,
-                      centerSpaceRadius: 30,
-                      sections: getSections(touchedIndex),
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(
-                        height: 10,
+                    Text(
+                      "Assignment Progress Chart",
+                      style: TextStyle(
+                          letterSpacing: 1,
+                          color: Colors.black,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 110.0),
+                      child: PieChart(
+                        PieChartData(
+                          pieTouchData: PieTouchData(
+                            touchCallback: (pieTouchResponse) {
+                              setState(() {
+                                if (pieTouchResponse.touchInput
+                                        is FlLongPressEnd ||
+                                    pieTouchResponse.touchInput is FlPanEnd) {
+                                  touchedIndex = -1;
+                                } else {
+                                  touchedIndex =
+                                      pieTouchResponse.touchedSectionIndex;
+                                }
+                              });
+                            },
+                          ),
+                          borderData: FlBorderData(show: false),
+                          sectionsSpace: 0,
+                          centerSpaceRadius: 30,
+                          sections: getSections(touchedIndex),
+                        ),
                       ),
-                      Text(
-                        "Account overview",
-                        style: TextStyle(
-                            letterSpacing: 1,
-                            color: Colors.black,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: <Widget>[
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            "Account overview",
+                            style: TextStyle(
+                                letterSpacing: 1,
+                                color: Colors.black,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          SizedBox(height: 15),
+                          Container(
+                            padding: EdgeInsets.symmetric(vertical: 4),
+                            margin: EdgeInsets.symmetric(horizontal: 20),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Color(0xfff4f7fb)),
+                            child: Center(
+                              child: ListTile(
+                                  leading: Container(
+                                    padding: EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                        color: Colors.deepPurple[50],
+                                        borderRadius: BorderRadius.circular(5)),
+                                    child: Icon(
+                                      EvaIcons.loaderOutline,
+                                      size: 30,
+                                      color: Colors.green,
+                                    ),
+                                  ),
+                                  title: Text(
+                                    "Section",
+                                    style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  trailing: Text(
+                                    section,
+                                    style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 20,
+                                        color: Colors.red),
+                                  )),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          GestureDetector(
+                            child: itemList(EvaIcons.clipboard, className, "0"),
+                            onTap: () {},
+                          ),
+                          SizedBox(height: 10),
+                          GestureDetector(
+                            child: itemList(EvaIcons.person, gender, "0"),
+                            onTap: () {},
+                          ),
+                          SizedBox(height: 10),
+                          GestureDetector(
+                            onTap: () {},
+                            child: itemList(EvaIcons.flagOutline, school, "0"),
+                          ),
+                          SizedBox(height: 10),
+                          // GestureDetector(
+                          //   child: itemList(EvaIcons.checkmarkCircle2Outline,
+                          //       "Monthly report", "1"),
+                          //   onTap: () {
+                          //     Navigator.of(context).push(
+                          //       MaterialPageRoute(
+                          //         builder: (BuildContext context) => WebViewPage(
+                          //           fileurl: monthlyReport,
+                          //           name: "Monthly Report",
+                          //         ),
+                          //       ),
+                          //     );
+                          //   },
+                          // ),
+                          // SizedBox(height: 10),
+
+                          SizedBox(height: 10),
+                          GestureDetector(
+                            child:
+                                itemList(EvaIcons.logOutOutline, "Logout", "1"),
+                            onTap: () {
+                              share.clearSharePreferances(context);
+                            },
+                          ),
+                        ],
                       ),
-                      SizedBox(height: 15),
-                      Container(
-                        padding: EdgeInsets.symmetric(vertical: 4),
-                        margin: EdgeInsets.symmetric(horizontal: 20),
-                        decoration: BoxDecoration(
+                    ),
+                  ],
+                )
+              : Column(
+                  children: <Widget>[
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 50,
+                        ),
+                        CircleAvatar(
+                          backgroundImage: NetworkImage(imageUrl),
+                          backgroundColor: Colors.white,
+                          radius: 40,
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              name,
+                              style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Container(
+                          height: 30,
+                          width: 200,
+                          decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
-                            color: Color(0xfff4f7fb)),
-                        child: Center(
-                          child: ListTile(
-                              leading: Container(
-                                padding: EdgeInsets.all(6),
-                                decoration: BoxDecoration(
-                                    color: Colors.deepPurple[50],
-                                    borderRadius: BorderRadius.circular(5)),
-                                child: Icon(
-                                  EvaIcons.loaderOutline,
-                                  size: 30,
-                                  color: Colors.green,
-                                ),
-                              ),
-                              title: Text(
-                                "Section",
+                            color: Color(0xff26c6da),
+                          ),
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Type : $rollNumber',
                                 style: TextStyle(
+                                    letterSpacing: 1,
+                                    color: Colors.black,
                                     fontFamily: "Poppins",
+                                    fontSize: 15,
                                     fontWeight: FontWeight.w600),
                               ),
-                              trailing: Text(
-                                section,
-                                style: TextStyle(
-                                    fontFamily: "Poppins",
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 20,
-                                    color: Colors.red),
-                              )),
+                            ),
+                          ),
                         ),
+                        SizedBox(
+                          height: 20,
+                        )
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: <Widget>[
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            "Account overview",
+                            style: TextStyle(
+                                letterSpacing: 1,
+                                color: Colors.black,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          SizedBox(height: 10),
+                          GestureDetector(
+                            child: itemList(EvaIcons.person, gender, "0"),
+                            onTap: () {},
+                          ),
+                          SizedBox(height: 10),
+                          GestureDetector(
+                            child: itemList(
+                                EvaIcons.bulbOutline, "Hidden Lamp", "0"),
+                            onTap: () {},
+                          ),
+                          SizedBox(height: 10),
+                          GestureDetector(
+                            child:
+                                itemList(EvaIcons.logOutOutline, "Logout", "1"),
+                            onTap: () {
+                              showDialog<void>(
+                                context: context,
+                                barrierDismissible: false,
+                                // user must tap button!
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text(
+                                      'Are you sure want to Logout?',
+                                      style: TextStyle(
+                                          color: Colors.black45,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: Text(
+                                          'Yes',
+                                          style: TextStyle(color: Colors.blue),
+                                        ),
+                                        onPressed: () async {
+                                          share.clearSharePreferances(context);
+                                        },
+                                      ),
+                                      TextButton(
+                                        child: Text(
+                                          'No',
+                                          style: TextStyle(color: Colors.blue),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        ],
                       ),
-                      SizedBox(height: 10),
-                      GestureDetector(
-                        child: itemList(EvaIcons.clipboard, className, "0"),
-                        onTap: () {},
-                      ),
-                      SizedBox(height: 10),
-                      GestureDetector(
-                        child: itemList(EvaIcons.person, gender, "0"),
-                        onTap: () {},
-                      ),
-                      SizedBox(height: 10),
-                      GestureDetector(
-                        onTap: () {},
-                        child: itemList(EvaIcons.flagOutline, school, "0"),
-                      ),
-                      SizedBox(height: 10),
-                      // GestureDetector(
-                      //   child: itemList(EvaIcons.checkmarkCircle2Outline,
-                      //       "Monthly report", "1"),
-                      //   onTap: () {
-                      //     Navigator.of(context).push(
-                      //       MaterialPageRoute(
-                      //         builder: (BuildContext context) => WebViewPage(
-                      //           fileurl: monthlyReport,
-                      //           name: "Monthly Report",
-                      //         ),
-                      //       ),
-                      //     );
-                      //   },
-                      // ),
-                      // SizedBox(height: 10),
-                      GestureDetector(
-                        child: itemList(EvaIcons.shareOutline, "Refer", "1"),
-                        onTap: () {},
-                      ),
-                      SizedBox(height: 10),
-                      GestureDetector(
-                        child: itemList(EvaIcons.logOutOutline, "Logout", "1"),
-                        onTap: () {
-                          share.clearSharePreferances(context);
-                        },
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
     ));
   }
 
@@ -363,6 +495,4 @@ class _ProfileViewState extends State<ProfileView> {
       ),
     );
   }
-
-  String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 }

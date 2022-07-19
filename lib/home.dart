@@ -82,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
     print(getUserStatus?[0]);
 
     DocumentReference projectCollectionRef =
-        FirebaseFirestore.instance.collection('Users').doc(getEmail?[0]);
+        FirebaseFirestore.instance.collection('Users').doc(getEmail![0]);
     DocumentSnapshot documentSnapshot = await projectCollectionRef.get();
     print(documentSnapshot.get("userName"));
     name = documentSnapshot.get("userName");
@@ -299,11 +299,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               );
                             },
-                            child: CircleAvatar(
-                              radius: 30,
-                              backgroundImage:
-                                  NetworkImage(reels[index]["ImageURL"]),
-                              backgroundColor: Colors.white70,
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  child: CircleAvatar(
+                                    radius: 28,
+                                    backgroundImage:
+                                        NetworkImage(reels[index]["ImageURL"]),
+                                    backgroundColor: Colors.white70,
+                                  ),
+                                ),
+                                Text(reels[index]["label"],style: TextStyle(fontSize: 10),)
+                              ],
                             ),
                           ),
                         ),

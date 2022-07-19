@@ -1,7 +1,6 @@
 // ignore_for_file: file_names, prefer_final_fields
 
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -21,6 +20,7 @@ class _AddPopularCourseState extends State<AddPopularCourse> {
   List episodeDuration = [];
   List episodeNames = [];
   List epiodesUrls = [];
+  List thoeryEpisodesUrl = [];
   String totalEpisodes = "";
 
   String language = "";
@@ -254,7 +254,7 @@ class _AddPopularCourseState extends State<AddPopularCourse> {
                         },
                         decoration: InputDecoration(
                             hintText:
-                                "Episode Urls Durations seperate by comma(,)",
+                                "Episode Urls seperate by comma(,)",
                             labelText: "Episode Url's",
                             border: OutlineInputBorder()),
                       ),
@@ -262,6 +262,38 @@ class _AddPopularCourseState extends State<AddPopularCourse> {
                   ],
                 ),
               ),
+              
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 15),
+                        child: Icon(
+                          EvaIcons.globe,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: TextField(
+                        onChanged: (value) {
+                          thoeryEpisodesUrl = value.split(",");
+                        },
+                        decoration: InputDecoration(
+                            hintText:
+                                "Video Episode Urls seperate by comma(,)",
+                            labelText: "Episode Url's",
+                            border: OutlineInputBorder()),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+
+              
 
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -507,6 +539,7 @@ class _AddPopularCourseState extends State<AddPopularCourse> {
                                 'Episodes': episodeNames,
                                 'EpisodesUrl': epiodesUrls,
                                 'ImageUrl': _controller.text.toString(),
+                                'TheoryEpisodes':thoeryEpisodesUrl,
                                 'Language': language,
                                 'LastUpdate':
                                     "${dateToday.day}/${dateToday.month}/${dateToday.year}",
