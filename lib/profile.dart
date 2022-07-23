@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api, prefer_typing_uninitialized_variables
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
@@ -6,6 +6,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:hidden_lamp/piedata/pie_data.dart';
+import 'package:hidden_lamp/services/WebviewPage.dart';
 import 'package:hidden_lamp/services/sharedPreferances.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -35,6 +36,32 @@ class _ProfileViewState extends State<ProfileView> {
   String imageUrl = "";
   String email = "";
   Share share = Share();
+  var assignments;
+  double len = 0;
+  var isCompleted = [];
+  var filterData;
+
+  Future<void> getAssignmentData(String assignmentName) async {
+    print(assignmentName);
+    CollectionReference projectCollectionRef =
+        FirebaseFirestore.instance.collection(assignmentName);
+    QuerySnapshot querySnapshot = await projectCollectionRef.get();
+    assignments = querySnapshot.docs.map((doc) => doc.data()).toList();
+    len = double.parse(assignments.length.toString());
+
+    setState(() {});
+  }
+
+  Future<void> getFilterDetails(String email) async {
+    var collection = FirebaseFirestore.instance.collection('Filter');
+    var docSnapshot = await collection.doc(email).get();
+    if (docSnapshot.exists) {
+      filterData = docSnapshot.data();
+      isCompleted = filterData["isAssignmentCompleted"];
+      print(isCompleted);
+    }
+    setState(() {});
+  }
 
   sharePreferances() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -43,58 +70,36 @@ class _ProfileViewState extends State<ProfileView> {
     setStatus == null ? setStatus = [] : print("List is not Empty");
     setUserEmail == null ? setUserEmail = [] : print("List is not Empty");
     var getEmail = prefs.getStringList("email");
-    var getUserStatus = prefs.getStringList("status");
-    print(getEmail);
-    print(getUserStatus?[0]);
+
     DocumentReference projectCollectionRef =
         FirebaseFirestore.instance.collection('Users').doc(getEmail![0]);
     DocumentSnapshot documentSnapshot = await projectCollectionRef.get();
-    print(documentSnapshot.get("userName"));
-    print(documentSnapshot.data().toString());
-    print(documentSnapshot.get("schoolName"));
-    imageUrl = documentSnapshot.get("ImageUrl");
     className = documentSnapshot.get("class");
+    imageUrl = documentSnapshot.get("ImageUrl");
+    className == "Courses"
+        ? className = "Assignments"
+        : className = documentSnapshot.get("class") + " assignment";
     gender = documentSnapshot.get("gender");
     monthlyReport = documentSnapshot.get("montlyReport");
     name = documentSnapshot.get("userName");
     rollNumber = documentSnapshot.get("rollNumber");
     school = documentSnapshot.get("schoolName");
     section = documentSnapshot.get("section");
+    getAssignmentData(className);
+    getFilterDetails(getEmail[0]);
     loading = false;
     setState(() {});
   }
 
   int touchedIndex = 0;
 
-  List<PieChartSectionData> getSections(int touchedIndex) => PieData.data
-      .asMap()
-      .map<int, PieChartSectionData>((index, data) {
-        final isTouched = index == touchedIndex;
-        final double fontSize = isTouched ? 15 : 10;
-        final double radius = isTouched ? 70 : 60;
-        final value = PieChartSectionData(
-          color: data.color,
-          value: data.percent,
-          title: '${data.percent}%',
-          radius: radius,
-          titleStyle: TextStyle(
-            fontSize: fontSize,
-            fontWeight: FontWeight.bold,
-            color: const Color(0xffffffff),
-          ),
-        );
-
-        return MapEntry(index, value);
-      })
-      .values
-      .toList();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: SingleChildScrollView(
       child: loading
           ? LinearProgressIndicator()
-          : section != "admin"
+          : section.toLowerCase() != "admin"
               ? Column(
                   children: <Widget>[
                     Column(
@@ -226,7 +231,41 @@ class _ProfileViewState extends State<ProfileView> {
                           borderData: FlBorderData(show: false),
                           sectionsSpace: 0,
                           centerSpaceRadius: 30,
-                          sections: getSections(touchedIndex),
+                          sections: [
+                            PieChartSectionData(
+                              color: Color(0xff0293ee),
+                              value: len,
+                              title: '${len.round()} Total ',
+                              radius: 60,
+                              titleStyle: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xffffffff),
+                              ),
+                            ),
+                            PieChartSectionData(
+                              color: Color(0xfff8b250),
+                              value: len-isCompleted.length,
+                              title: '${len.round()-isCompleted.length} Not Completed',
+                              radius: 60,
+                              titleStyle: TextStyle(
+                                fontSize: 7,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xffffffff),
+                              ),
+                            ),
+                            PieChartSectionData(
+                              color: const Color(0xff13d38e),
+                              value: double.parse(isCompleted.length.toString()),
+                              title: '${isCompleted.length} Completed',
+                              radius: 60,
+                              titleStyle: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xffffffff),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -297,22 +336,21 @@ class _ProfileViewState extends State<ProfileView> {
                             child: itemList(EvaIcons.flagOutline, school, "0"),
                           ),
                           SizedBox(height: 10),
-                          // GestureDetector(
-                          //   child: itemList(EvaIcons.checkmarkCircle2Outline,
-                          //       "Monthly report", "1"),
-                          //   onTap: () {
-                          //     Navigator.of(context).push(
-                          //       MaterialPageRoute(
-                          //         builder: (BuildContext context) => WebViewPage(
-                          //           fileurl: monthlyReport,
-                          //           name: "Monthly Report",
-                          //         ),
-                          //       ),
-                          //     );
-                          //   },
-                          // ),
-                          // SizedBox(height: 10),
-
+                          GestureDetector(
+                            child: itemList(EvaIcons.checkmarkCircle2Outline,
+                                "Monthly report", "1"),
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      WebViewPage(
+                                    fileurl: "",
+                                    name: "Monthly Report",
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                           SizedBox(height: 10),
                           GestureDetector(
                             child:
@@ -496,3 +534,25 @@ class _ProfileViewState extends State<ProfileView> {
     );
   }
 }
+
+List<PieChartSectionData> getSections(int touchedIndex) => PieData.data
+    .asMap()
+    .map<int, PieChartSectionData>((index, data) {
+      final isTouched = index == touchedIndex;
+      final double fontSize = isTouched ? 15 : 10;
+      final double radius = isTouched ? 70 : 60;
+      final value = PieChartSectionData(
+        color: data.color,
+        value: data.percent,
+        title: '${data.percent}%',
+        radius: radius,
+        titleStyle: TextStyle(
+          fontSize: fontSize,
+          fontWeight: FontWeight.bold,
+          color: const Color(0xffffffff),
+        ),
+      );
+      return MapEntry(index, value);
+    })
+    .values
+    .toList();

@@ -91,7 +91,7 @@ class _UpdateUserState extends State<UpdateUser> {
                         data: Theme.of(context)
                             .copyWith(splashColor: Colors.transparent),
                         child: TextField(
-                          onChanged: ((value) {
+                          onSubmitted: ((value) {
                             search = value;
                             setState(() {});
                           }),
@@ -337,7 +337,7 @@ class _EditUserState extends State<EditUser> {
   TextEditingController schoolName = TextEditingController();
   TextEditingController className = TextEditingController();
   TextEditingController password = TextEditingController();
-
+  TextEditingController monthlyReport = TextEditingController();
   TextEditingController gender = TextEditingController();
   TextEditingController phone = TextEditingController();
   TextEditingController userType = TextEditingController();
@@ -353,6 +353,7 @@ class _EditUserState extends State<EditUser> {
     schoolName.text = widget.users[widget.index]['schoolName'];
     password.text = widget.users[widget.index]['Password'];
     className.text=widget.users[widget.index]['class'];
+    monthlyReport.text=widget.users[widget.index]['montlyReport'];
     gender.text = widget.users[widget.index]['gender'];
     phone.text = widget.users[widget.index]['phoneNumber'];
     imageController.text = widget.users[widget.index]['ImageUrl'];
@@ -435,7 +436,7 @@ class _EditUserState extends State<EditUser> {
                     Expanded(
                       child: TextField(
                         controller: userName,
-                        onChanged: (value) {
+                        onSubmitted: (value) {
                           userName.text = value;
                         },
                         decoration: InputDecoration(
@@ -447,7 +448,6 @@ class _EditUserState extends State<EditUser> {
                   ],
                 ),
               ),
-
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
@@ -465,7 +465,7 @@ class _EditUserState extends State<EditUser> {
                     Expanded(
                       child: TextField(
                         controller: rollName,
-                        onChanged: (value) {
+                        onSubmitted: (value) {
                           rollName.text = value;
                         },
                         decoration: InputDecoration(
@@ -495,7 +495,7 @@ class _EditUserState extends State<EditUser> {
                     Expanded(
                       child: TextField(
                         controller: section,
-                        onChanged: (value) {
+                        onSubmitted: (value) {
                           section.text = value;
                         },
                         decoration: InputDecoration(
@@ -524,7 +524,7 @@ class _EditUserState extends State<EditUser> {
                     Expanded(
                       child: TextField(
                         controller: schoolName,
-                        onChanged: (value) {
+                        onSubmitted: (value) {
                           schoolName.text = value;
                         },
                         decoration: InputDecoration(
@@ -612,12 +612,44 @@ class _EditUserState extends State<EditUser> {
                       child: TextField(
                           controller: phone,
                           maxLines: null,
-                          onChanged: (value) {
+                          onSubmitted: (value) {
                             phone.text = value;
                           },
                           decoration: InputDecoration(
                               hintText: "phone",
                               labelText: "phone",
+                              border: OutlineInputBorder()),
+                          keyboardType: TextInputType.multiline),
+                    ),
+                  ],
+                ),
+              ),
+
+              
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 15),
+                        child: Icon(
+                          Icons.phone,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: TextField(
+                          controller: monthlyReport,
+                          maxLines: null,
+                          onSubmitted: (value) {
+                            monthlyReport.text = value;
+                          },
+                          decoration: InputDecoration(
+                              hintText: "Monthly Report",
+                              labelText: "Monthly Report",
                               border: OutlineInputBorder()),
                           keyboardType: TextInputType.multiline),
                     ),
@@ -643,7 +675,7 @@ class _EditUserState extends State<EditUser> {
                       child: TextField(
                           maxLines: null,
                           controller: password,
-                          onChanged: (value) {
+                          onSubmitted: (value) {
                             password.text = value;
                           },
                           decoration: InputDecoration(
@@ -810,7 +842,7 @@ class _EditUserState extends State<EditUser> {
                             'schoolName': schoolName.text.toString(),
                             'rollNumber': rollName.text.toString(),
                             'phoneNumber': phone.text.toString(),
-                            'montlyReport': "",
+                            'montlyReport': monthlyReport.text.toString(),
                             'gender': gender.text.toString(),
                             'class': className.text.toString(),
                             'Password': password.text.toString(),

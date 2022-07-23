@@ -1,8 +1,6 @@
 // ignore_for_file: file_names, prefer_typing_uninitialized_variables
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-
 import 'package:flutter/material.dart';
 
 class AddressDetails extends StatefulWidget {
@@ -45,7 +43,6 @@ class _AddressDetailsState extends State<AddressDetails> {
                       color: Colors.grey[600]),
                 ),
               ),
-
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
@@ -256,9 +253,7 @@ class _AddressDetailsState extends State<AddressDetails> {
                   Card(
                     color: Colors.deepOrange[400],
                     child: TextButton.icon(
-
                         //checking the fields to promte the user if its Empty
-
                         onPressed: () {
                           if (name != "" &&
                               phone != "" &&

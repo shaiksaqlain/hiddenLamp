@@ -1,7 +1,5 @@
 // ignore_for_file: prefer_final_fields, file_names
-
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -42,7 +40,6 @@ class _UserUploadState extends State<UserUpload> {
 
   Future uploadImage(File image) async {
     final firebaseStorage = FirebaseStorage.instance;
-
     // ignore: unnecessary_null_comparison
     if (image != null) {
       //Upload to Firebase
@@ -84,7 +81,6 @@ class _UserUploadState extends State<UserUpload> {
                       color: Colors.grey[600]),
                 ),
               ),
-
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
@@ -102,12 +98,13 @@ class _UserUploadState extends State<UserUpload> {
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.grey,
-                            ),
-                            borderRadius: BorderRadius.circular(
-                              5,
-                            )),
+                          border: Border.all(
+                            color: Colors.grey,
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            5,
+                          ),
+                        ),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: DropdownButton<String>(
@@ -115,16 +112,20 @@ class _UserUploadState extends State<UserUpload> {
                             items: <String>[
                               'admin',
                               'student',
-                            ].map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
+                            ].map(
+                              (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              },
+                            ).toList(),
                             onChanged: (value) {
-                              setState(() {
-                                userType = value!;
-                              });
+                              setState(
+                                () {
+                                  userType = value!;
+                                },
+                              );
                             },
                           ),
                         ),
@@ -133,7 +134,6 @@ class _UserUploadState extends State<UserUpload> {
                   ],
                 ),
               ),
-
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
@@ -154,9 +154,10 @@ class _UserUploadState extends State<UserUpload> {
                           userName = value;
                         },
                         decoration: InputDecoration(
-                            hintText: "User Name",
-                            labelText: "user name",
-                            border: OutlineInputBorder()),
+                          hintText: "User Name",
+                          labelText: "user name",
+                          border: OutlineInputBorder(),
+                        ),
                       ),
                     )
                   ],
@@ -183,16 +184,16 @@ class _UserUploadState extends State<UserUpload> {
                                 rollName = value;
                               },
                               decoration: InputDecoration(
-                                  hintText: "Roll Number",
-                                  labelText: "Roll Number",
-                                  border: OutlineInputBorder()),
+                                hintText: "Roll Number",
+                                labelText: "Roll Number",
+                                border: OutlineInputBorder(),
+                              ),
                             ),
                           )
                         ],
                       ),
                     )
                   : Container(),
-
               userType == "student"
                   ? Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -214,9 +215,10 @@ class _UserUploadState extends State<UserUpload> {
                                 section = value;
                               },
                               decoration: InputDecoration(
-                                  hintText: "Section",
-                                  labelText: "Section",
-                                  border: OutlineInputBorder()),
+                                hintText: "Section",
+                                labelText: "Section",
+                                border: OutlineInputBorder(),
+                              ),
                             ),
                           )
                         ],
@@ -244,9 +246,10 @@ class _UserUploadState extends State<UserUpload> {
                                 schoolName = value;
                               },
                               decoration: InputDecoration(
-                                  hintText: "Enter School Name",
-                                  labelText: "School Name",
-                                  border: OutlineInputBorder()),
+                                hintText: "Enter School Name",
+                                labelText: "School Name",
+                                border: OutlineInputBorder(),
+                              ),
                             ),
                           )
                         ],
@@ -300,9 +303,11 @@ class _UserUploadState extends State<UserUpload> {
                                     );
                                   }).toList(),
                                   onChanged: (value) {
-                                    setState(() {
-                                      className = value!;
-                                    });
+                                    setState(
+                                      () {
+                                        className = value!;
+                                      },
+                                    );
                                   },
                                 ),
                               ),
@@ -312,7 +317,6 @@ class _UserUploadState extends State<UserUpload> {
                       ),
                     )
                   : Container(),
-
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
@@ -334,9 +338,10 @@ class _UserUploadState extends State<UserUpload> {
                             phone = value;
                           },
                           decoration: InputDecoration(
-                              hintText: "phone",
-                              labelText: "phone",
-                              border: OutlineInputBorder()),
+                            hintText: "phone",
+                            labelText: "phone",
+                            border: OutlineInputBorder(),
+                          ),
                           keyboardType: TextInputType.multiline),
                     ),
                   ],
@@ -364,9 +369,10 @@ class _UserUploadState extends State<UserUpload> {
                             password = value;
                           },
                           decoration: InputDecoration(
-                              hintText: "Password",
-                              labelText: "Password",
-                              border: OutlineInputBorder()),
+                            hintText: "Password",
+                            labelText: "Password",
+                            border: OutlineInputBorder(),
+                          ),
                           keyboardType: TextInputType.multiline),
                     ),
                   ],
@@ -392,9 +398,10 @@ class _UserUploadState extends State<UserUpload> {
                           controller: _controller,
                           maxLines: null,
                           decoration: InputDecoration(
-                              hintText: "Image Link",
-                              labelText: "Image Link",
-                              border: OutlineInputBorder()),
+                            hintText: "Image Link",
+                            labelText: "Image Link",
+                            border: OutlineInputBorder(),
+                          ),
                           keyboardType: TextInputType.multiline),
                     ),
                     Expanded(
@@ -408,7 +415,6 @@ class _UserUploadState extends State<UserUpload> {
                   ],
                 ),
               ),
-
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
@@ -426,12 +432,13 @@ class _UserUploadState extends State<UserUpload> {
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.grey,
-                            ),
-                            borderRadius: BorderRadius.circular(
-                              5,
-                            )),
+                          border: Border.all(
+                            color: Colors.grey,
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            5,
+                          ),
+                        ),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: DropdownButton<String>(
@@ -439,16 +446,20 @@ class _UserUploadState extends State<UserUpload> {
                             items: <String>[
                               'Male',
                               'Female',
-                            ].map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
+                            ].map(
+                              (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              },
+                            ).toList(),
                             onChanged: (value) {
-                              setState(() {
-                                gender = value!;
-                              });
+                              setState(
+                                () {
+                                  gender = value!;
+                                },
+                              );
                             },
                           ),
                         ),
@@ -457,6 +468,7 @@ class _UserUploadState extends State<UserUpload> {
                   ],
                 ),
               ),
+
 // A flat icon Button  Which calls the function to upload the data into firebase
 
               Column(
@@ -465,23 +477,21 @@ class _UserUploadState extends State<UserUpload> {
                   Card(
                     color: Colors.deepOrange[400],
                     child: TextButton.icon(
-
-                        //checking the fields to promte the user if its Empty
-
-                        onPressed: () {
-                          if (userType == "student") {
-                            if (userName != '' &&
-                                section != '' &&
-                                schoolName != '' &&
-                                rollName != '' &&
-                                phone != '' &&
-                                gender != '' &&
-                                className != '' &&
-                                password != '') {
-                              FirebaseFirestore.instance
-                                  .collection('Users')
-                                  .doc(phone)
-                                  .set({
+                      onPressed: () {
+                        if (userType == "student") {
+                          if (userName != '' &&
+                              section != '' &&
+                              schoolName != '' &&
+                              rollName != '' &&
+                              phone != '' &&
+                              gender != '' &&
+                              className != '' &&
+                              password != '') {
+                            FirebaseFirestore.instance
+                                .collection('Users')
+                                .doc(phone)
+                                .set(
+                              {
                                 'userName': userName,
                                 'section': section,
                                 'schoolName': schoolName,
@@ -493,30 +503,42 @@ class _UserUploadState extends State<UserUpload> {
                                 'Password': password,
                                 'ImageUrl': _controller.text.toString(),
                                 'type': userType
-                              });
-                              Navigator.of(context).pop();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("User Added Successfully"),
-                                ),
-                              );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("All fields are needed"),
-                                ),
-                              );
-                            }
+                              },
+                            );
+                            FirebaseFirestore.instance
+                                .collection('Filter')
+                                .doc(phone)
+                                .set(
+                              {
+                                'userNameisAssignmentCompleted': [],
+                                'isCourseCompleted': [],
+                                'isCourseOngoing': [],
+                              },
+                            );
+                            Navigator.of(context).pop();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("User Added Successfully"),
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("All fields are needed"),
+                              ),
+                            );
                           }
-                          if (userType == "admin") {
-                            if (userName != '' &&
-                                phone != '' &&
-                                gender != '' &&
-                                password != '') {
-                              FirebaseFirestore.instance
-                                  .collection('Users')
-                                  .doc(phone)
-                                  .set({
+                        }
+                        if (userType == "admin") {
+                          if (userName != '' &&
+                              phone != '' &&
+                              gender != '' &&
+                              password != '') {
+                            FirebaseFirestore.instance
+                                .collection('Users')
+                                .doc(phone)
+                                .set(
+                              {
                                 'userName': userName,
                                 'section': "Admin",
                                 'schoolName': "admin",
@@ -528,30 +550,32 @@ class _UserUploadState extends State<UserUpload> {
                                 'Password': password,
                                 'ImageUrl': _controller.text.toString(),
                                 'type': userType
-                              });
-                              Navigator.of(context).pop();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("User Added Successfully"),
-                                ),
-                              );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("All fields are needed"),
-                                ),
-                              );
-                            }
+                              },
+                            );
+                            Navigator.of(context).pop();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("User Added Successfully"),
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("All fields are needed"),
+                              ),
+                            );
                           }
-                        },
-                        icon: Icon(EvaIcons.upload, color: Colors.white),
-                        label: Text(
-                          "Upload",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15),
-                        )),
+                        }
+                      },
+                      icon: Icon(EvaIcons.upload, color: Colors.white),
+                      label: Text(
+                        "Upload",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15),
+                      ),
+                    ),
                   )
                 ],
               )

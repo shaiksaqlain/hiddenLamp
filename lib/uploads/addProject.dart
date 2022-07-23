@@ -20,6 +20,7 @@ class _AddProjectState extends State<AddProject> {
   String projectName = "";
   File? image;
   String rating = "";
+  String docID = "";
 
   DateTime dateToday = DateTime.now();
 
@@ -120,7 +121,36 @@ class _AddProjectState extends State<AddProject> {
                       child: Padding(
                         padding: const EdgeInsets.only(right: 15),
                         child: Icon(
-                          EvaIcons.book,
+                          EvaIcons.starOutline,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: TextField(
+                        onChanged: (value) {
+                          docID = value;
+                        },
+                        decoration: InputDecoration(
+                            hintText: "Document ID",
+                            labelText: "Enter Document ID",
+                            border: OutlineInputBorder()),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 15),
+                        child: Icon(
+                          EvaIcons.personOutline,
                           color: Colors.grey,
                         ),
                       ),
@@ -284,7 +314,7 @@ class _AddProjectState extends State<AddProject> {
                             try {
                               FirebaseFirestore.instance
                                   .collection("Projects")
-                                  .doc()
+                                  .doc(docID)
                                   .set({
                                 'Author': autherName,
                                 'ProjectName': projectName,
@@ -293,6 +323,7 @@ class _AddProjectState extends State<AddProject> {
                                     "${dateToday.day}/${dateToday.month}/${dateToday.year}",
                                 'Rating': rating,
                                 'Discription': discription,
+                                'DocID':docID
                               });
                               Navigator.of(context).pop();
                               ScaffoldMessenger.of(context).showSnackBar(

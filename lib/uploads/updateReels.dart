@@ -87,7 +87,7 @@ class _UpdateReelState extends State<UpdateReel> {
                         data: Theme.of(context)
                             .copyWith(splashColor: Colors.transparent),
                         child: TextField(
-                          onChanged: ((value) {
+                          onSubmitted: ((value) {
                             search = value;
                             setState(() {});
                           }),
@@ -173,63 +173,85 @@ class _UpdateReelState extends State<UpdateReel> {
                                       )
                                     : Text(
                                         "Content : ${reels[index]["Content"]}"),
-                                Center(
-                                  child: TextButton.icon(
-                                      onPressed: () {
-                                        showDialog<void>(
-                                          context: context,
-                                          barrierDismissible: false,
-                                          // user must tap button!
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title: Text(
-                                                'Are you sure want to Remove?',
-                                                style: TextStyle(
-                                                    color: Colors.black45,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              actions: <Widget>[
-                                                TextButton(
-                                                  child: Text(
-                                                    'Yes',
-                                                    style: TextStyle(
-                                                        color: Colors.blue),
-                                                  ),
-                                                  onPressed: () async {
-                                                    FirebaseFirestore.instance
-                                                        .collection("Reels")
-                                                        .doc(reels[index]
-                                                            ["DocID"])
-                                                        .delete();
-                                                    setState(
-                                                      () {
-                                                        getReelsData();
-                                                      },
-                                                    );
-                                                    Navigator.of(context).pop();
-                                                  },
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    TextButton.icon(
+                                        onPressed: () {
+                                          showDialog<void>(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            // user must tap button!
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text(
+                                                  'Are you sure want to Remove?',
+                                                  style: TextStyle(
+                                                      color: Colors.black45,
+                                                      fontWeight:
+                                                          FontWeight.bold),
                                                 ),
-                                                TextButton(
-                                                  child: Text(
-                                                    'No',
-                                                    style: TextStyle(
-                                                        color: Colors.blue),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    child: Text(
+                                                      'Yes',
+                                                      style: TextStyle(
+                                                          color: Colors.blue),
+                                                    ),
+                                                    onPressed: () async {
+                                                      FirebaseFirestore.instance
+                                                          .collection("Reels")
+                                                          .doc(reels[index]
+                                                              ["DocID"])
+                                                          .delete();
+                                                      setState(
+                                                        () {
+                                                          getReelsData();
+                                                        },
+                                                      );
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
                                                   ),
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      },
-                                      icon: Icon(
-                                        EvaIcons.personRemoveOutline,
-                                        color: Colors.red[600],
-                                      ),
-                                      label: Text("Remove")),
+                                                  TextButton(
+                                                    child: Text(
+                                                      'No',
+                                                      style: TextStyle(
+                                                          color: Colors.blue),
+                                                    ),
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        },
+                                        icon: Icon(
+                                          EvaIcons.fileRemoveOutline,
+                                          color: Colors.red[600],
+                                        ),
+                                        label: Text("Remove")),
+                                    TextButton.icon(
+                                        onPressed: () {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          EditReel(
+                                                            reels: reels,
+                                                            index: index,
+                                                          )));
+                                        },
+                                        icon: Icon(
+                                          EvaIcons.edit2Outline,
+                                          color: Colors.orange[400],
+                                        ),
+                                        label: Text("Edit")),
+                                  ],
                                 )
                               ],
                             ),
@@ -247,49 +269,39 @@ class _UpdateReelState extends State<UpdateReel> {
 }
 
 // ignore: duplicate_ignore
-class EditUser extends StatefulWidget {
-  const EditUser({Key? key, this.reels, this.index}) : super(key: key);
+class EditReel extends StatefulWidget {
+  const EditReel({Key? key, this.reels, this.index}) : super(key: key);
 
   final reels;
   final index;
 
   @override
-  State<EditUser> createState() => _Editreelstate();
+  State<EditReel> createState() => _Editreelstate();
 }
 
-class _Editreelstate extends State<EditUser> {
-  TextEditingController userName = TextEditingController();
+class _Editreelstate extends State<EditReel> {
+  TextEditingController contenttype = TextEditingController();
 
-  TextEditingController rollName = TextEditingController();
-  TextEditingController section = TextEditingController();
-  TextEditingController schoolName = TextEditingController();
+  TextEditingController label = TextEditingController();
+  TextEditingController docID = TextEditingController();
+  TextEditingController content = TextEditingController();
   TextEditingController className = TextEditingController();
-  TextEditingController password = TextEditingController();
-
-  TextEditingController gender = TextEditingController();
-  TextEditingController phone = TextEditingController();
-  TextEditingController userType = TextEditingController();
 
   File? image;
   TextEditingController imageController = TextEditingController();
 
   @override
   void initState() {
-    userName.text = widget.reels[widget.index]['userName'];
-    rollName.text = widget.reels[widget.index]['rollNumber'];
-    section.text = widget.reels[widget.index]['section'];
-    schoolName.text = widget.reels[widget.index]['schoolName'];
-    password.text = widget.reels[widget.index]['Password'];
-    className.text = widget.reels[widget.index]['class'];
-    gender.text = widget.reels[widget.index]['gender'];
-    phone.text = widget.reels[widget.index]['phoneNumber'];
-    imageController.text = widget.reels[widget.index]['ImageUrl'];
-    userType.text = widget.reels[widget.index]['type'];
+    contenttype.text = widget.reels[widget.index]['ContentType'];
+    label.text = widget.reels[widget.index]['label'];
+    docID.text = widget.reels[widget.index]['DocID'];
+    content.text = widget.reels[widget.index]['Content'];
+    imageController.text = widget.reels[widget.index]['ImageURL'];
 
     super.initState();
   }
 
-  Future pickImage() async {
+  Future pickImage(bool isContentImage) async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
       if (image == null) return;
@@ -298,12 +310,11 @@ class _Editreelstate extends State<EditUser> {
     } catch (e) {
       print('Failed to pick image: $e');
     }
-    uploadImage(image!);
+    uploadImage(image!, isContentImage);
   }
 
-  Future uploadImage(File image) async {
+  Future uploadImage(File image, bool isContentImage) async {
     final firebaseStorage = FirebaseStorage.instance;
-
     // ignore: unnecessary_null_comparison
     if (image != null) {
       //Upload to Firebase
@@ -314,7 +325,12 @@ class _Editreelstate extends State<EditUser> {
 
       var downloadUrl = await snapshot.ref.getDownloadURL();
       setState(() {
-        imageController.text = downloadUrl;
+        isContentImage
+            ? {
+                content.text = downloadUrl,
+              }
+            : {imageController.text = downloadUrl};
+
         print(downloadUrl);
       });
     } else {
@@ -338,7 +354,7 @@ class _Editreelstate extends State<EditUser> {
               Container(
                 margin: EdgeInsets.only(top: 15, right: 15, left: 15),
                 child: Text(
-                  "You Are Updating User Details.",
+                  "You Are Uploading Reel Details.",
                   style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
@@ -361,125 +377,6 @@ class _Editreelstate extends State<EditUser> {
                       ),
                     ),
                     Expanded(
-                      child: TextField(
-                        controller: userName,
-                        onChanged: (value) {
-                          userName.text = value;
-                        },
-                        decoration: InputDecoration(
-                            hintText: "User Name",
-                            labelText: "user name",
-                            border: OutlineInputBorder()),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 15),
-                        child: Icon(
-                          EvaIcons.hashOutline,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: TextField(
-                        controller: rollName,
-                        onChanged: (value) {
-                          rollName.text = value;
-                        },
-                        decoration: InputDecoration(
-                            hintText: "Roll Number",
-                            labelText: "Roll Number",
-                            border: OutlineInputBorder()),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 15),
-                        child: Icon(
-                          EvaIcons.bulbOutline,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: TextField(
-                        controller: section,
-                        onChanged: (value) {
-                          section.text = value;
-                        },
-                        decoration: InputDecoration(
-                            hintText: "Section",
-                            labelText: "Section",
-                            border: OutlineInputBorder()),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 15),
-                        child: Icon(
-                          EvaIcons.flagOutline,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: TextField(
-                        controller: schoolName,
-                        onChanged: (value) {
-                          schoolName.text = value;
-                        },
-                        decoration: InputDecoration(
-                            hintText: "Enter School Name",
-                            labelText: "School Name",
-                            border: OutlineInputBorder()),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 15),
-                        child: Icon(
-                          EvaIcons.shieldOutline,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                    Expanded(
                       child: Container(
                         decoration: BoxDecoration(
                             border: Border.all(
@@ -491,18 +388,10 @@ class _Editreelstate extends State<EditUser> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: DropdownButton<String>(
-                            hint: Text(className.text),
+                            hint: Text(contenttype.text),
                             items: <String>[
-                              '1st Class',
-                              '2nt Class',
-                              '3rt Class',
-                              '4th Class',
-                              '5th Class',
-                              '6th Class',
-                              '7th Class',
-                              '8th Class',
-                              '9th Class',
-                              '10th Class',
+                              'image',
+                              'text',
                             ].map((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
@@ -511,7 +400,7 @@ class _Editreelstate extends State<EditUser> {
                             }).toList(),
                             onChanged: (value) {
                               setState(() {
-                                className.text = value!;
+                                contenttype.text = value!;
                               });
                             },
                           ),
@@ -521,7 +410,6 @@ class _Editreelstate extends State<EditUser> {
                   ],
                 ),
               ),
-
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
@@ -531,24 +419,23 @@ class _Editreelstate extends State<EditUser> {
                       child: Padding(
                         padding: const EdgeInsets.only(right: 15),
                         child: Icon(
-                          Icons.phone,
+                          EvaIcons.text,
                           color: Colors.grey,
                         ),
                       ),
                     ),
                     Expanded(
                       child: TextField(
-                          controller: phone,
-                          maxLines: null,
-                          onChanged: (value) {
-                            phone.text = value;
-                          },
-                          decoration: InputDecoration(
-                              hintText: "phone",
-                              labelText: "phone",
-                              border: OutlineInputBorder()),
-                          keyboardType: TextInputType.multiline),
-                    ),
+                        controller: label,
+                        onSubmitted: (value) {
+                          label.text = value;
+                        },
+                        decoration: InputDecoration(
+                            hintText: "Label",
+                            labelText: "Enter label (1 word)",
+                            border: OutlineInputBorder()),
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -562,27 +449,94 @@ class _Editreelstate extends State<EditUser> {
                       child: Padding(
                         padding: const EdgeInsets.only(right: 15),
                         child: Icon(
-                          Icons.password_outlined,
+                          EvaIcons.starOutline,
                           color: Colors.grey,
                         ),
                       ),
                     ),
                     Expanded(
                       child: TextField(
-                          maxLines: null,
-                          controller: password,
-                          onChanged: (value) {
-                            password.text = value;
-                          },
-                          decoration: InputDecoration(
-                              hintText: "Password",
-                              labelText: "Password",
-                              border: OutlineInputBorder()),
-                          keyboardType: TextInputType.multiline),
-                    ),
+                        controller: docID,
+                        onSubmitted: (value) {
+                          docID.text = value;
+                        },
+                        decoration: InputDecoration(
+                            hintText: "REEl ID",
+                            labelText: "REEL ID",
+                            border: OutlineInputBorder()),
+                      ),
+                    )
                   ],
                 ),
               ),
+
+              contenttype.text == "text"
+                  ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 15),
+                              child: Icon(
+                                EvaIcons.text,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: TextField(
+                              controller: content,
+                              onSubmitted: (value) {
+                                content.text = value;
+                              },
+                              decoration: InputDecoration(
+                                  hintText: "Content",
+                                  labelText: "Enter Content",
+                                  border: OutlineInputBorder()),
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 15),
+                              child: Icon(
+                                EvaIcons.imageOutline,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 3,
+                            child: TextField(
+                                controller: content,
+                                maxLines: null,
+                                decoration: InputDecoration(
+                                    hintText: "Content Image Link",
+                                    labelText: "Content Image Link",
+                                    border: OutlineInputBorder()),
+                                keyboardType: TextInputType.multiline),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: IconButton(
+                                onPressed: () {
+                                  pickImage(true);
+                                },
+                                icon: Icon(Icons.upload)),
+                          )
+                        ],
+                      ),
+                    ),
+
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
@@ -612,108 +566,10 @@ class _Editreelstate extends State<EditUser> {
                       flex: 1,
                       child: IconButton(
                           onPressed: () {
-                            pickImage();
+                            pickImage(false);
                           },
                           icon: Icon(Icons.upload)),
                     )
-                  ],
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 15),
-                        child: Icon(
-                          EvaIcons.starOutline,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.grey,
-                            ),
-                            borderRadius: BorderRadius.circular(
-                              5,
-                            )),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: DropdownButton<String>(
-                            hint: Text(gender.text),
-                            items: <String>[
-                              'Male',
-                              'Female',
-                            ].map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                gender.text = value!;
-                              });
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 15),
-                        child: Icon(
-                          EvaIcons.personAddOutline,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.grey,
-                            ),
-                            borderRadius: BorderRadius.circular(
-                              5,
-                            )),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: DropdownButton<String>(
-                            hint: Text(userType.text),
-                            items: <String>[
-                              'admin',
-                              'student',
-                            ].map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                userType.text = value!;
-                              });
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -727,30 +583,32 @@ class _Editreelstate extends State<EditUser> {
                     child: TextButton.icon(
 
                         //checking the fields to promte the user if its Empty
-
                         onPressed: () {
-                          FirebaseFirestore.instance
-                              .collection('reels')
-                              .doc(phone.text)
-                              .update({
-                            'userName': userName.text.toString(),
-                            'section': section.text.toString(),
-                            'schoolName': schoolName.text.toString(),
-                            'rollNumber': rollName.text.toString(),
-                            'phoneNumber': phone.text.toString(),
-                            'montlyReport': "",
-                            'gender': gender.text.toString(),
-                            'class': className.text.toString(),
-                            'Password': password.text.toString(),
-                            'ImageUrl': imageController.text.toString(),
-                            'type': userType.text.toString()
-                          });
-                          Navigator.of(context).pop();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("User Added Successfully"),
-                            ),
-                          );
+                          if (content.text != '' && contenttype.text != '') {
+                            FirebaseFirestore.instance
+                                .collection('Reels')
+                                .doc(docID.text)
+                                .update({
+                              'Content': content.text.toString(),
+                              'label': label.text.toString(),
+                              'ContentType': contenttype.text.toString(),
+                              'ImageURL': imageController.text.toString(),
+                              'DocID': docID.text.toString()
+                            });
+
+                            Navigator.of(context).pop();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("User Added Successfully"),
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("All fields are needed"),
+                              ),
+                            );
+                          }
                         },
                         icon: Icon(EvaIcons.upload, color: Colors.white),
                         label: Text(

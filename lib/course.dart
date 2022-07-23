@@ -78,7 +78,7 @@ class _CourseState extends State<Course> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Image(
-                image: AssetImage("assets/1.png"),
+                image:NetworkImage(widget.courseDetails["ImageUrl"]),
               ),
               Text(
                 widget.courseDetails["CourseName"],

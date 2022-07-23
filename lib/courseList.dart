@@ -74,7 +74,7 @@ class _CourseListState extends State<CourseList> {
                 child: ListView.builder(
                   shrinkWrap: true,
                   scrollDirection: Axis.vertical,
-                  itemCount: widget.courseList["TotalEpisodes"],
+                  itemCount: 3,
                   itemBuilder: (BuildContext context, int index) =>
                       ExpansionTile(
                     textColor: Colors.black,

@@ -5,12 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:hidden_lamp/deliverProducts.dart';
 import 'package:hidden_lamp/uploads/addAssignment.dart';
 import 'package:hidden_lamp/uploads/addCourse.dart';
+import 'package:hidden_lamp/uploads/addProduct.dart';
 import 'package:hidden_lamp/uploads/addProject.dart';
 import 'package:hidden_lamp/uploads/addReel.dart';
-import 'package:hidden_lamp/uploads/popular%20courses.dart';
+import 'package:hidden_lamp/uploads/addPopularCourse.dart';
 import 'package:hidden_lamp/uploads/addUser.dart';
+import 'package:hidden_lamp/uploads/updatePopularCourse.dart';
+import 'package:hidden_lamp/uploads/updateProduct.dart';
 import 'package:hidden_lamp/uploads/updateReels.dart';
 import 'package:hidden_lamp/uploads/updateUser.dart';
+import 'package:hidden_lamp/uploads/updateproject.dart';
 
 class AdminPanel extends StatefulWidget {
   const AdminPanel({Key? key}) : super(key: key);
@@ -70,10 +74,62 @@ class _AdminPanelState extends State<AdminPanel> {
                           label: Text("Create")),
                       TextButton.icon(
                           onPressed: () {
-
-                             Navigator.of(context).push(
+                            Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (BuildContext context) => UpdateUser(),
+                              ),
+                            );
+                          },
+                          icon: Icon(
+                            EvaIcons.edit2Outline,
+                            color: Colors.orange[400],
+                          ),
+                          label: Text("Update")),
+                    ],
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              ExpansionTile(
+                textColor: Colors.black,
+                title: Text(
+                  "Reels",
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+                subtitle:
+                    Text("You can create and update the Reels Details here."),
+                leading: Container(
+                  padding: EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                      color: Colors.deepPurple[50],
+                      borderRadius: BorderRadius.circular(5)),
+                  child: Icon(EvaIcons.starOutline,
+                      size: 30, color: Colors.deepPurple[300]),
+                ),
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      TextButton.icon(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (BuildContext context) => AddReel(),
+                              ),
+                            );
+                          },
+                          icon: Icon(
+                            EvaIcons.fileAddOutline,
+                            color: Colors.red[600],
+                          ),
+                          label: Text("Create")),
+                      TextButton.icon(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (BuildContext context) => UpdateReel(),
                               ),
                             );
                           },
@@ -118,7 +174,7 @@ class _AdminPanelState extends State<AdminPanel> {
                             );
                           },
                           icon: Icon(
-                            EvaIcons.personAddOutline,
+                            EvaIcons.fileAddOutline,
                             color: Colors.red[600],
                           ),
                           label: Text("Create")),
@@ -133,61 +189,6 @@ class _AdminPanelState extends State<AdminPanel> {
                   )
                 ],
               ),
-              
-              SizedBox(
-                height: 20,
-              ),
-              ExpansionTile(
-                textColor: Colors.black,
-                title: Text(
-                  "Reels",
-                  style: TextStyle(fontWeight: FontWeight.w600),
-                ),
-                subtitle:
-                    Text("You can create and update the Reels Details here."),
-                leading: Container(
-                  padding: EdgeInsets.all(3),
-                  decoration: BoxDecoration(
-                      color: Colors.deepPurple[50],
-                      borderRadius: BorderRadius.circular(5)),
-                  child: Icon(EvaIcons.starOutline,
-                      size: 30, color: Colors.deepPurple[300]),
-                ),
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      TextButton.icon(
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (BuildContext context) => AddReel(),
-                              ),
-                            );
-                          },
-                          icon: Icon(
-                            EvaIcons.personAddOutline,
-                            color: Colors.red[600],
-                          ),
-                          label: Text("Create")),
-                      TextButton.icon(
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (BuildContext context) =>UpdateReel(),
-                              ),
-                            );
-                          },
-                          icon: Icon(
-                            EvaIcons.edit2Outline,
-                            color: Colors.orange[400],
-                          ),
-                          label: Text("Update")),
-                    ],
-                  )
-                ],
-              ),
-              
               SizedBox(
                 height: 20,
               ),
@@ -197,8 +198,8 @@ class _AdminPanelState extends State<AdminPanel> {
                   "Assignment",
                   style: TextStyle(fontWeight: FontWeight.w600),
                 ),
-                subtitle:
-                    Text("You can create and update the Assignment Details here."),
+                subtitle: Text(
+                    "You can create and update the Assignment Details here."),
                 leading: Container(
                   padding: EdgeInsets.all(3),
                   decoration: BoxDecoration(
@@ -215,12 +216,13 @@ class _AdminPanelState extends State<AdminPanel> {
                           onPressed: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (BuildContext context) => AddAssignment(),
+                                builder: (BuildContext context) =>
+                                    AddAssignment(),
                               ),
                             );
                           },
                           icon: Icon(
-                            EvaIcons.personAddOutline,
+                            EvaIcons.fileAddOutline,
                             color: Colors.red[600],
                           ),
                           label: Text("Create")),
@@ -238,7 +240,6 @@ class _AdminPanelState extends State<AdminPanel> {
               SizedBox(
                 height: 20,
               ),
-              
               ExpansionTile(
                 textColor: Colors.black,
                 title: Text(
@@ -263,28 +264,47 @@ class _AdminPanelState extends State<AdminPanel> {
                           onPressed: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (BuildContext context) => DeliveryPage(),
+                                builder: (BuildContext context) => Addproduct(),
                               ),
                             );
                           },
                           icon: Icon(
-                            EvaIcons.personAddOutline,
+                            EvaIcons.fileAddOutline,
                             color: Colors.red[600],
                           ),
                           label: Text("Create")),
                       TextButton.icon(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    UpdateProduct(),
+                              ),
+                            );
+                          },
                           icon: Icon(
                             EvaIcons.edit2Outline,
                             color: Colors.orange[400],
                           ),
                           label: Text("Update")),
+                      TextButton.icon(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    DeliveryPage(),
+                              ),
+                            );
+                          },
+                          icon: Icon(
+                            EvaIcons.shoppingBagOutline,
+                            color: Colors.purple[400],
+                          ),
+                          label: Text("Delivery")),
                     ],
                   )
                 ],
               ),
-
-              
               SizedBox(
                 height: 20,
               ),
@@ -312,17 +332,23 @@ class _AdminPanelState extends State<AdminPanel> {
                           onPressed: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (BuildContext context) => AddProject()
-                              ),
+                                  builder: (BuildContext context) =>
+                                      AddProject()),
                             );
                           },
                           icon: Icon(
-                            EvaIcons.personAddOutline,
+                            EvaIcons.fileAddOutline,
                             color: Colors.red[600],
                           ),
                           label: Text("Create")),
                       TextButton.icon(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      UpdateProject()),
+                            );
+                          },
                           icon: Icon(
                             EvaIcons.edit2Outline,
                             color: Colors.orange[400],
@@ -332,19 +358,17 @@ class _AdminPanelState extends State<AdminPanel> {
                   )
                 ],
               ),
-
               SizedBox(
                 height: 20,
               ),
-              
               ExpansionTile(
                 textColor: Colors.black,
                 title: Text(
                   "Popular Course",
                   style: TextStyle(fontWeight: FontWeight.w600),
                 ),
-                subtitle:
-                    Text("You can create and update the Popular Course Details here."),
+                subtitle: Text(
+                    "You can create and update the Popular Course Details here."),
                 leading: Container(
                   padding: EdgeInsets.all(3),
                   decoration: BoxDecoration(
@@ -361,7 +385,8 @@ class _AdminPanelState extends State<AdminPanel> {
                           onPressed: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (BuildContext context) => AddPopularCourse(),
+                                builder: (BuildContext context) =>
+                                    AddPopularCourse(),
                               ),
                             );
                           },
@@ -371,7 +396,14 @@ class _AdminPanelState extends State<AdminPanel> {
                           ),
                           label: Text("Create")),
                       TextButton.icon(
-                          onPressed: () {},
+                          onPressed: () {
+                              Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    UpdatePopularCourse(),
+                              ),
+                            );
+                          },
                           icon: Icon(
                             EvaIcons.edit2Outline,
                             color: Colors.orange[400],

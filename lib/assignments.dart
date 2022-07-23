@@ -1,4 +1,4 @@
-// ignore_for_file: sort_child_properties_last
+// ignore_for_file: sort_child_properties_last, prefer_typing_uninitialized_variables
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:hidden_lamp/services/WebviewPage.dart';
 import 'package:hidden_lamp/services/drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'OnCompletedAssignments.dart';
 
 class Assignments extends StatefulWidget {
   const Assignments({Key? key}) : super(key: key);
@@ -20,6 +22,7 @@ class _AssignmentsState extends State<Assignments> {
     sharePreferances();
     super.initState();
   }
+
   var assignments = [];
   String name = "";
   String schoolName = "";
@@ -27,13 +30,17 @@ class _AssignmentsState extends State<Assignments> {
   String type = "";
   String userImage = "";
   String search = "";
+  List isCompleted = [];
+  var filterData;
+  String email = "";
+
   DrawerWidget drawerWidget = DrawerWidget();
   Future<void> getAssignmentData(String assignmentName) async {
     CollectionReference projectCollectionRef =
         FirebaseFirestore.instance.collection(assignmentName);
     QuerySnapshot querySnapshot = await projectCollectionRef.get();
     assignments = querySnapshot.docs.map((doc) => doc.data()).toList();
-    print(assignments[0]);
+    print(assignments);
     setState(() {});
   }
 
@@ -45,10 +52,12 @@ class _AssignmentsState extends State<Assignments> {
     setUserEmail == null ? setUserEmail = [] : print("List is not Empty");
     var getEmail = prefs.getStringList("email");
     var getUserStatus = prefs.getStringList("status");
-    print(getEmail);
+
+    email = getEmail![0];
+    print(email);
     print(getUserStatus?[0]);
     DocumentReference projectCollectionRef =
-        FirebaseFirestore.instance.collection('Users').doc(getEmail![0]);
+        FirebaseFirestore.instance.collection('Users').doc(getEmail[0]);
     DocumentSnapshot documentSnapshot = await projectCollectionRef.get();
     print(documentSnapshot.get("userName"));
     name = documentSnapshot.get("userName");
@@ -60,7 +69,27 @@ class _AssignmentsState extends State<Assignments> {
         : className = documentSnapshot.get("class") + " assignment";
     type = documentSnapshot.get("type");
     getAssignmentData(className);
+    getFilterDetails(getEmail[0]);
     setState(() {});
+  }
+
+  Future<void> getFilterDetails(String email) async {
+    var collection = FirebaseFirestore.instance.collection('Filter');
+    var docSnapshot = await collection.doc(email).get();
+    if (docSnapshot.exists) {
+      filterData = docSnapshot.data();
+      isCompleted = filterData["isAssignmentCompleted"];
+      print(isCompleted);
+    }
+
+    setState(() {});
+  }
+
+  updateFilter() {
+    FirebaseFirestore.instance
+        .collection('Filter')
+        .doc(email)
+        .update({'isAssignmentCompleted': isCompleted});
   }
 
   @override
@@ -158,15 +187,16 @@ class _AssignmentsState extends State<Assignments> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: Wrap(
-                  children: const [
-                    Chip(
+                  children: [
+                    ActionChip(
+                      onPressed: () {},
                       elevation: 0.3,
                       backgroundColor: Colors.green,
                       avatar: CircleAvatar(
                         backgroundColor: Colors.white,
-                        child: Text('A'),
+                        child: Text('P'),
                       ),
-                      label: Text('ALL',
+                      label: Text('Pending',
                           style: TextStyle(
                             color: Colors.white,
                           )),
@@ -174,30 +204,31 @@ class _AssignmentsState extends State<Assignments> {
                     SizedBox(
                       width: 5,
                     ),
-                    Chip(
+                    ActionChip(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                OncompletedAssignments(
+                              email: email,
+                              assignments: assignments,
+                              oncompletedlist: isCompleted,
+                            ),
+                          ),
+                        );
+                      },
                       elevation: 0.3,
                       backgroundColor: Colors.white,
                       avatar: CircleAvatar(
                         backgroundColor: Colors.yellow,
-                        child: Text('20',
+                        child: Text('C',
                             style: TextStyle(
-                              color: Colors.white,
-                            )),
-                      ),
-                      label: Text('Pending'),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Chip(
-                      elevation: 0.3,
-                      backgroundColor: Colors.white,
-                      avatar: CircleAvatar(
-                        backgroundColor: Colors.blue,
-                        child: Text('C'),
+                                color: Colors.black54,
+                                fontWeight: FontWeight.w700)),
                       ),
                       label: Text('Completed'),
                     ),
+                  
                   ],
                 ),
               ),
@@ -210,117 +241,172 @@ class _AssignmentsState extends State<Assignments> {
                   scrollDirection: Axis.vertical,
                   itemCount: assignments.length,
                   itemBuilder: (BuildContext context, int index) =>
-                      ((assignments[index]["assignmentName"])
-                              .toString()
-                              .toLowerCase()
-                              .startsWith(search))
-                          ? GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        WebViewPage(
-                                      fileurl: assignments[index]
-                                          ["AssignmentUrl"],
-                                      name: assignments[index]
-                                          ["assignmentName"],
+                      (!isCompleted.contains(assignments[index]["DocId"]))
+                          ? ((assignments[index]["assignmentName"])
+                                  .toString()
+                                  .toLowerCase()
+                                  .startsWith(search))
+                              ? GestureDetector(
+                                  onTap: () {
+                                    showDialog<void>(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      // user must tap button!
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text(
+                                            'Do you want to start this Assignment ?',
+                                            style: TextStyle(
+                                                color: Colors.black87,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          content: Text(
+                                              "Once you Start you can't Retake your assignment"),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: Text(
+                                                'Yes',
+                                                style: TextStyle(
+                                                    color: Colors.blue),
+                                              ),
+                                              onPressed: () async {
+                                                isCompleted.add(
+                                                    assignments[index]
+                                                        ["DocId"]);
+                                                updateFilter();
+                                                getAssignmentData(className);
+                                                Navigator.of(context).pop();
+                                                Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                    builder: (BuildContext
+                                                            context) =>
+                                                        WebViewPage(
+                                                      fileurl:
+                                                          assignments[index]
+                                                              ["AssignmentUrl"],
+
+                                                      name: assignments[index]
+                                                          ["assignmentName"],
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                            TextButton(
+                                              child: Text(
+                                                'No',
+                                                style: TextStyle(
+                                                    color: Colors.blue),
+                                              ),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: Card(
+                                    elevation: 0.3,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15.0),
+                                      side: BorderSide(
+                                        color: Colors.grey.withOpacity(0.4),
+                                        width: 1,
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
-                              child: Card(
-                                elevation: 0.3,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15.0),
-                                  side: BorderSide(
-                                    color: Colors.grey.withOpacity(0.4),
-                                    width: 1,
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(15.0),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Center(
-                                              child: Text(
-                                            "Assignment ${index + 1}",
-                                            style: TextStyle(
-                                                color: Colors.red,
-                                                fontSize: 10,
-                                                fontWeight: FontWeight.bold),
-                                          )),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Center(
-                                              child: Text(
-                                            assignments[index]
-                                                ["assignmentName"],
-                                            style: TextStyle(
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.bold),
-                                          )),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Text(
-                                            assignments[index]["description"],
-                                            textAlign: TextAlign.justify,
-                                            maxLines: 3,
-                                            style: TextStyle(
-                                                fontSize: 8,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          SizedBox(height: 10),
-                                          Row(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(15.0),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
-                                              Text(
-                                                "Date: ${assignments[index]["date"]}",
+                                              Center(
+                                                  child: Text(
+                                                "Assignment ${index + 1}",
                                                 style: TextStyle(
-                                                    fontSize: 9,
+                                                    color: Colors.red,
+                                                    fontSize: 10,
                                                     fontWeight:
                                                         FontWeight.bold),
-                                              ),
+                                              )),
                                               SizedBox(
-                                                width: 10,
+                                                height: 10,
                                               ),
-                                              Text(
-                                                "Time: ${assignments[index]["time"]}",
+                                              Center(
+                                                  child: Text(
+                                                assignments[index]
+                                                    ["assignmentName"],
                                                 style: TextStyle(
-                                                    fontSize: 9,
+                                                    fontSize: 13,
                                                     fontWeight:
                                                         FontWeight.bold),
-                                              ),
+                                              )),
                                               SizedBox(
-                                                width: 10,
+                                                height: 10,
                                               ),
                                               Text(
-                                                "Deadline: ${assignments[index]["deadline"]}",
+                                                assignments[index]
+                                                    ["description"],
+                                                textAlign: TextAlign.justify,
+                                                maxLines: 3,
                                                 style: TextStyle(
-                                                    fontSize: 9,
+                                                    fontSize: 8,
                                                     fontWeight:
                                                         FontWeight.bold),
+                                              ),
+                                              SizedBox(height: 10),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "Date: ${assignments[index]["date"]}",
+                                                    style: TextStyle(
+                                                        fontSize: 9,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Text(
+                                                    "Time: ${assignments[index]["time"]}",
+                                                    style: TextStyle(
+                                                        fontSize: 9,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Text(
+                                                    "Deadline: ${assignments[index]["deadline"]}",
+                                                    style: TextStyle(
+                                                        fontSize: 9,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ],
                                               ),
                                             ],
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                      ],
                                     ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            )
+                                  ),
+                                )
+                              : Container()
                           : Container(),
                 ),
               ),

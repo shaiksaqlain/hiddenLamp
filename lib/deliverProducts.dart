@@ -111,55 +111,6 @@ class _DeliveryPageState extends State<DeliveryPage> {
               ],
             ),
           ),
-          SizedBox(
-            height: 20,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Wrap(
-              children: const [
-                Chip(
-                  elevation: 0.3,
-                  backgroundColor: Colors.green,
-                  avatar: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: Text('P'),
-                  ),
-                  label: Text('Pending',
-                      style: TextStyle(
-                        color: Colors.white,
-                      )),
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                Chip(
-                  elevation: 0.3,
-                  backgroundColor: Colors.white,
-                  avatar: CircleAvatar(
-                    backgroundColor: Colors.yellow,
-                    child: Text('P',
-                        style: TextStyle(
-                          color: Colors.white,
-                        )),
-                  ),
-                  label: Text('On Progress'),
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                Chip(
-                  elevation: 0.3,
-                  backgroundColor: Colors.white,
-                  avatar: CircleAvatar(
-                    backgroundColor: Colors.blue,
-                    child: Text('D'),
-                  ),
-                  label: Text('Delivered'),
-                ),
-              ],
-            ),
-          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 0),
             child: ListView.builder(

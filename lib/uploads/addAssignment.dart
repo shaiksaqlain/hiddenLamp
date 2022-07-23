@@ -18,6 +18,7 @@ class _AddAssignmentState extends State<AddAssignment> {
   String deadLine = "";
   String description = "";
   String time = "";
+  String docId="";
   DateTime dateToday = DateTime.now();
 
   @override
@@ -66,6 +67,36 @@ class _AddAssignmentState extends State<AddAssignment> {
                         decoration: InputDecoration(
                             hintText: "Assignment Name",
                             labelText: "Assignment Name",
+                            border: OutlineInputBorder()),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+
+              
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 15),
+                        child: Icon(
+                          EvaIcons.starOutline,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: TextField(
+                        onChanged: (value) {
+                          docId = value;
+                        },
+                        decoration: InputDecoration(
+                            hintText: "Document ID",
+                            labelText: "Document ID",
                             border: OutlineInputBorder()),
                       ),
                     )
@@ -297,7 +328,7 @@ class _AddAssignmentState extends State<AddAssignment> {
                               description != '') {
                             FirebaseFirestore.instance
                                 .collection(assignmentClass)
-                                .doc()
+                                .doc(docId)
                                 .set({
                               'AssignmentUrl': assignmentUrl,
                               'assignmentName': assignmentName,
@@ -305,7 +336,8 @@ class _AddAssignmentState extends State<AddAssignment> {
                                   "${dateToday.day}/${dateToday.month}/${dateToday.year}",
                               'deadline': deadLine,
                               'time': time,
-                              'description': description
+                              'description': description,
+                              'DocId':docId.toUpperCase()
                             });
                             FirebaseFirestore.instance
                                 .collection("Assignments")
